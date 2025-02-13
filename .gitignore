@@ -1,0 +1,22 @@
+**/__pycache__/
+.pytest_cache/
+.venv/
+.wsl_env/
+migrations/
+migrations_p/
+migrations_s/
+node_modules/
+.env
+.flaskenv
+
+# Editor directories and files
+.vscode/
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

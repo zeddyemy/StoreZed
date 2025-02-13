@@ -1,0 +1,91 @@
+{% extends 'web_admin/base/base.html' %}
+{% block title %}Add New Category - {{ super() }}{% endblock %}
+
+{% block CSSandJS_Links %}
+<link rel="stylesheet" href="{{url_for('static', filename='web_admin/css/add-cat.css')}}">
+{% endblock %}
+
+{% block content %}
+<section class="lg:pt-1">
+    <div class="mx-auto max-w-screen-md lg:py-16 lg:pt-1">
+        <h2 class="mb-1 text-2xl font-bold text-gray-900 dark:text-white"> {% block form_title %} Add a new category {% endblock %}</h2>
+        <p class="mb-4 text-gray-900 dark:text-white"> 
+            {% block form_tagline %}
+            Create a new category and add them to this site.
+            {% endblock %}
+        </p>
+
+        <form method="post" action="{% block form_action %} {{ url_for('web_admin.add_new_category') }} {% endblock %}" class="pt-2" id="add-category-form" enctype="multipart/form-data">
+            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-4">
+                {% if 'csrf_token' in form %}
+                {{form.csrf_token}}
+                {% endif %}
+
+                <div class="form-group !mb-0 sm:col-span-2">
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                    {{ form.name(class_ = 'form-control text-sm rounded-lg shadow-sm-light border border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900', placeholder='category', autofocus = true) }}
+
+                    <small class="text-gray-400"> The name is how it appears on your site. </small>
+
+                    {% for error in form.name.errors %}
+                    <div class="alert alert-error form-error" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor%}
+                </div>
+
+                <div class="form-group !mb-0 sm:col-span-2">
+                    <label for="parent_cat" class="block mb-2 text-sm font-medium">Parent Category</label>
+                    {{ form.parent_cat(class_ = 'form-control text-sm rounded-lg shadow-sm-light border border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900 w-full capitalize', autofocus = true) }}
+
+                    <small class="text-gray-400"> Categories, unlike tags, can have a hierarchy. You might have a Jazz category, and under that have children categories for Bebop and Big Band. Totally optional. </small>
+                    
+                    {% for error in form.parent_cat.errors %}
+                    <div class="alert alert-error form-error" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor%}
+                </div>
+
+                <div class="form-group !mb-0 sm:col-span-2">
+                    <label for="description" class="block mb-2 text-sm font-medium">Description</label>
+                    {{ form.description(class_ = 'form-control text-sm rounded-lg shadow-sm-light border border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900 w-full', autofocus = true) }}
+                    
+                    {% for error in form.description.errors %}
+                    <div class="alert alert-error form-error" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor%}
+                </div>
+
+                <div class="form-group !mb-0 sm:col-span-2">
+                    <label for="cat_img" class="block mb-2 text-sm font-medium">Thumbnail</label>
+
+                    <div id="cat-thumbnail-container" class="relative gap-6 flex items-center w-full">
+                        <div class="cat-thumbnail size-24 rounded-lg shadow-sm-light border border-outline-clr relative bg-cover bg-center">
+                            {% if category.media_id %}
+                            <img src="{{ url_for('static', filename=category.get_thumbnail()) }}" alt="category image" class="rounded-lg !w-full !h-full overflow-hidden object-cover transition-all">
+                            {% else %}
+                            <img src="{{ url_for('static', filename='web_admin/img/placeholder-300x300.jpg') }}" alt="category image" class="rounded-lg !w-full !h-full overflow-hidden object-cover transition-all">
+                            {% endif %}
+                        </div>
+                        
+                        <button class="inline-flex items-center px-3 py-2 text-xs font-medium text-center text-gray-900 hover:text-white rounded-lg hover:bg-theme-clr border border-theme-clr focus:ring-2 focus:outline-none focus:ring-outline-clr !relative z-[0]" disabled> 
+                            Upload/Add image
+
+                            {{ form.cat_img(class_ = 'form-control cursor-pointer !p-[0] !w-full !h-full !absolute top-[0] left-[0] opacity-0 z-[99]', autofocus = true) }}
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <button type="submit" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-lg bg-theme-clr hover:bg-theme-hvr-clr">
+                {% block form_btn_txt %}
+                Add Category
+                {% endblock %}
+            </button>
+        </form>
+    </div>
+</section>
+{% endblock %}

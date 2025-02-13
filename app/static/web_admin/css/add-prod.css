@@ -1,0 +1,53 @@
+/**
+stylesheets for the add new product page
+*/
+
+
+/* add tags */
+#tag-list {
+    display: flex;
+}
+
+.tag-list-item {
+    padding: 0.25rem 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+
+    border-radius: 0.325rem;
+    margin: 0;
+
+    background-color: #dde0e4;
+    color: #1f2124;
+}
+.tag-del-btn {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding: 0.25rem;
+    background-color: transparent;
+    border-radius: 0.2rem;
+    color: #9ca3af;
+}
+.tag-del-btn::after {
+    content: "\ec8d";
+    font-family: boxicons !important;
+    font-size: 1.2rem;
+}
+.tag-del-btn:hover {
+    background-color: #ff000024;
+    color: #111827;
+}
+
+/* add categories */
+.cat-input-label::after {
+    content: '\002B';
+    padding: 0px;
+    margin-left: 5px;
+    font-weight: bold;
+    background-color: var(--theme-clr);
+    text-align: center;
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    color: #fff;
+    border-radius: 5px;
+}

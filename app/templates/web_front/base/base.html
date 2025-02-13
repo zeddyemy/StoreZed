@@ -1,0 +1,57 @@
+{% set currency = GENERAL_SETTINGS["currency"] or "NGN" %}
+{% set currency_pos = GENERAL_SETTINGS["currency_position"] or "left" %}
+{% set thousand_sep = GENERAL_SETTINGS["thousand_separator"] or "," %}
+{% set decimal_sep = GENERAL_SETTINGS["decimal_separator"] or "." %}
+{% set num_decimals = GENERAL_SETTINGS["number_of_decimals"] or "2" %}
+
+{% macro format_amount(amount) %}
+    {% set formatted_amount = "{:,.{}f}".format(amount, num_decimals) %}
+    {% set formatted_amount = formatted_amount.replace(",", thousand_sep).replace(".", decimal_sep) %}
+    
+    {% if currency_pos == "left" %}
+        {{ currency ~ formatted_amount }}
+    {% elif currency_pos == "right" %}
+        {{ formatted_amount ~ currency }}
+    {% elif currency_pos == "left_space" %}
+        {{ currency ~ " " ~ formatted_amount }}
+    {% elif currency_pos == "right_space" %}
+        {{ formatted_amount ~ " " ~ currency }}
+    {% endif %}
+{% endmacro %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>{% block title %}{% endblock %}</title>
+        <link href="{{url_for('static',filename='web_front/css/output.css')}}" rel="stylesheet">
+        <link rel="stylesheet" href="{{url_for('static', filename='web_front/css/style.css')}}">
+        
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+        {% block CSSandJS_Links %}{% endblock %}
+        {% block styles_script %}{% endblock %}
+    </head>
+
+    <body class="" style="background: #edf2f7;">
+        {% include 'web_front/components/header.html' %}
+
+        <section id="wrapper" class="min-h-svh pt-16">
+            {% include 'web_front/components/sidebar.html' %}
+
+            <!-- Main content -->
+            <section id="main" class="p-5 min-h-svh lg:w-10/12 lg:ml-[calc(100%-theme(width.10/12))] flex flex-col gap-y-4 bg-white dark:bg-gray-800 lg:min-h-[calc(100svh-theme(width.16))]">
+                {% include 'web_front/components/alert_modal.html' %}
+                {% block content %}{% endblock %}
+            </section>
+        </section>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+        <script src="{{ url_for('static', filename='web_front/js/script.js') }}"></script>
+        <script src="{{ url_for('static', filename='web_front/js/alert.js') }}"></script>
+    </body>
+</html>

@@ -1,0 +1,14 @@
+{% extends 'web_admin/pages/tags/new_tag.html' %}
+
+{% block title %}Edit Tag{% endblock %}
+
+{% block form_title %}Edit Tag{% endblock %}
+{% block form_tagline %} Edit the tag and update it on this site. {% endblock %}
+
+{% block form_action %} {{ url_for('web_admin.edit_tag', slug = tag.slug) }} {% endblock %}
+
+{% block form_btn_txt %} Update Tag {% endblock %}
+
+{% block form_content %}
+    {{ super() }}
+{% endblock %}

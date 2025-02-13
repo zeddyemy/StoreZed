@@ -1,0 +1,59 @@
+{% extends 'web_admin/base/base.html' %}
+{% block title %}Add New Tag - {{ super() }}{% endblock %}
+
+{% block CSSandJS_Links %}
+<link rel="stylesheet" href="{{url_for('static', filename='web_admin/css/add-cat.css')}}">
+{% endblock %}
+
+{% block content %}
+<section class="lg:pt-1">
+    <div class="mx-auto max-w-screen-md lg:py-16 lg:pt-1">
+        <h2 class="mb-1 text-2xl font-bold text-gray-900 dark:text-white"> {% block form_title %} Add a new tag {% endblock %}</h2>
+        <p class="mb-4 text-gray-900 dark:text-white"> 
+            {% block form_tagline %}
+            Create a new tag and add them to this site.
+            {% endblock %}
+        </p>
+
+        <form method="post" action="{% block form_action %} {{ url_for('web_admin.add_new_tag') }} {% endblock %}" class="pt-2" id="add-tag-form" enctype="multipart/form-data">
+            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-4">
+                {% if 'csrf_token' in form %}
+                {{form.csrf_token}}
+                {% endif %}
+
+                <div class="form-group !mb-0 sm:col-span-2">
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                    {{ form.name(class_ = 'form-control text-sm rounded-lg shadow-sm-light border border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900', placeholder='tag', autofocus = true) }}
+
+                    <small class="text-gray-400"> The name is how it appears on your site. </small>
+
+                    {% for error in form.name.errors %}
+                    <div class="alert alert-error form-error" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor%}
+                </div>
+
+                <div class="form-group !mb-0 sm:col-span-2">
+                    <label for="description" class="block mb-2 text-sm font-medium">Description</label>
+                    {{ form.description(class_ = 'form-control text-sm rounded-lg shadow-sm-light border border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900 w-full', autofocus = true) }}
+                    
+                    {% for error in form.description.errors %}
+                    <div class="alert alert-error form-error" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor%}
+                </div>
+
+                
+            </div>
+
+            <button type="submit" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-lg bg-theme-clr hover:bg-theme-hvr-clr">
+                {% block form_btn_txt %}
+                Add Tag
+                {% endblock %}
+            </button>
+        </form>
+    </div>
+</section>
+{% endblock %}

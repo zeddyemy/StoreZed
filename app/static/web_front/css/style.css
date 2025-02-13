@@ -1,0 +1,37 @@
+::-webkit-scrollbar {
+    width: 7px;
+    height: 5px;
+}
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px grey;
+    background-color: var(--body-bg-clr);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--theme-clr);
+    border-radius: 4px;
+}
+
+#main {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-image: url(../img/img-1.jpg);
+    height: 100%;
+    position: relative;
+}
+#main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0000004f;
+    backdrop-filter: blur(5px);
+}
+
+#main section,
+#main>div {
+    position: relative;
+}

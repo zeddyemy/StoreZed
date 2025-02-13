@@ -1,0 +1,18 @@
+{% extends 'web_front/base/base.html' %}
+{% block title %}Dashboard - {{ super() }}{% endblock %}
+
+{% block content %}
+
+{% include 'web_front/components/wallet_balance.html' %}
+
+<section class="sec">
+    <div id="orders-container"
+        class="card bg-black/70 text-white hover:bg-black/75 rounded-lg p-6 border border-gray-600 flex flex-col items-center justify-center gap-y-4">
+
+        <p class="text-lg font-semibold"> No Orders Made </p>
+
+    </div>
+</section>
+
+
+{% endblock %}

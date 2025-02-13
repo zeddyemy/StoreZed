@@ -1,0 +1,96 @@
+{% extends 'web_admin/base/base.html' %}
+{% block title %}Add New Users - {{ super() }}{% endblock %}
+
+{% block content %}
+<section class="">
+    <div class="mx-auto max-w-screen-md lg:py-16 lg:pt-1">
+        <h2 class="mb-1 text-2xl font-bold text-gray-900 dark:text-white"> {% block form_title %} Add a new user {% endblock %}</h2>
+        <p class="mb-4 text-gray-900 dark:text-white"> 
+            {% block form_tagline %}
+            Create a brand new user and add them to this site.
+            {% endblock %}
+        </p>
+
+        <form method="post" action="{% block form_action %} {{ url_for('web_admin.add_new_user') }} {% endblock %}" class="pt-2" id="add-user-form" enctype="multipart/form-data">
+            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-4">
+                {% if 'csrf_token' in form %}
+                {{form.csrf_token}}
+                {% endif %}
+                <div class="form-group !mb-0 sm:col-span-2">
+                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                    {{ form.email(class_ = 'form-control text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2 border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white', placeholder='example@mail.com', autofocus = true) }}
+                    {% for error in form.email.errors %}
+                    <div class="alert alert-error form-error" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor%}
+                </div>
+
+                <div class="form-group !mb-0 sm:col-span-2">
+                    <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                    {{ form.username(class_ = 'form-control text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2 border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white', autofocus = true) }}
+                    {% for error in form.username.errors %}
+                    <div class="alert alert-error form-error" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor%}
+                </div>
+
+                <div class="form-group !mb-0 w-full">
+                    <label for="firstName" class="block mb-2 text-sm font-medium">First Name</label>
+                    {{ form.firstname(class_ = 'form-control text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2
+                    border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none
+                    bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white', autofocus = true) }}
+                    {% for error in form.firstname.errors %}
+                    <div class="alert alert-error form-error" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor%}
+                </div>
+                
+                <div class="form-group !mb-0 w-full">
+                    <label for="lastName" class="block mb-2 text-sm font-medium">Last Name</label>
+                    {{ form.lastname(class_ = 'form-control text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2
+                    border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none
+                    bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white', autofocus = true) }}
+                    
+                    {% for error in form.lastname.errors %}
+                    <div class="alert alert-error form-error" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor%}
+                </div>
+
+                <div class="form-group !mb-0 w-full">
+                    <label for="password" class="block mb-2 text-sm font-medium">Password</label>
+                    {{ form.password(class_ = 'form-control text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2
+                    border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none
+                    bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white', placeholder='password', autofocus = true) }}
+                
+                    {% for error in form.password.errors %}
+                    <div class="alert alert-error form-error" role="alert">
+                        {{ error }}
+                    </div> {% endfor%}
+                </div>
+
+                <div class="form-group !mb-0 w-full">
+                    <label for="role" class="block mb-2 text-sm font-medium">Role</label>
+                    {{ form.role(class_ = 'form-control text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2
+                    border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none
+                    bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white', autofocus = true) }}
+                
+                    {% for error in form.role.errors %}
+                    <div class="alert alert-error form-error" role="alert">
+                        {{ error }}
+                    </div> {% endfor%}
+                </div>
+            </div>
+            <button type="submit" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-lg bg-theme-clr hover:bg-theme-hvr-clr">
+                {% block form_btn_txt %}
+                Add User
+                {% endblock %}
+            </button>
+        </form>
+    </div>
+</section>
+{% endblock %}

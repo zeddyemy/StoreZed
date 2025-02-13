@@ -1,0 +1,14 @@
+{% extends 'web_admin/pages/categories/new_category.html' %}
+
+{% block title %}Edit Category{% endblock %}
+
+{% block form_title %}Edit Category{% endblock %}
+{% block form_tagline %} Edit the category and update it on this site. {% endblock %}
+
+{% block form_action %} {{ url_for('web_admin.edit_category', slug = category.slug) }} {% endblock %}
+
+{% block form_btn_txt %} Update Category {% endblock %}
+
+{% block form_content %}
+    {{ super() }}
+{% endblock %}

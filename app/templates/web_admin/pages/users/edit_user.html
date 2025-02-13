@@ -1,0 +1,13 @@
+{% extends 'web_admin/pages/users/new_user.html' %}
+{% block title %}Edit User{% endblock %}
+
+{% block form_title %}Edit User{% endblock %}
+{% block form_tagline %} Edit the user's information. {% endblock %}
+
+{% block form_action %} {{ url_for('web_admin.edit_user', user_id = user.id) }} {% endblock %}
+
+{% block form_btn_txt %} Update {% endblock %}
+
+{% block form_content %}
+    {{ super() }}
+{% endblock %}

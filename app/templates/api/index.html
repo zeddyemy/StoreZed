@@ -1,0 +1,32 @@
+{% extends 'api/base/base.html' %}
+{% block title %} {{ site_title }} - {{ super() }}{% endblock %}
+
+{% block content %}
+
+
+<div class="h-screen">
+    <section class="h-full px-4 md:px-2 bg-white dark:bg-gray-900 flex items-center justify-center">
+        <div class="card py-8 px-6 mx-auto max-w-screen-xl lg:py-16 lg:px-6 rounded-lg shadow-xl flex flex-col gap-4 items-center justify-center border border-outline-clr">
+            <div class="logo size-[190px] rounded-full border border-outline-clr bg-center bg-cover bg-no-repeat overflow-hidden">
+                <img src="{{ url_for('static', filename='api/img/api.jpeg') }}" alt="API Logo" class="bg-cover object-cover transform-[scale(1.0)]">
+            </div>
+
+            <div class="mx-auto max-w-screen-sm text-center">
+                <h1 class="mb-1 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white">
+                    {{ site_title }} Backend
+                </h1>
+                <p class="mb-4 text-md tracking-tight font-medium text-gray-600 dark:text-white"> {{ site_tagline }} </p>
+            </div>   
+
+            <div class="buttons-box flex gap-4">
+                <a href="{{ url_for('swagger_ui.show') }}" target="_blank" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-theme-clr rounded-lg border-[2px] border-theme-clr hover:bg-theme-hvr-clr focus:ring-4 focus:outline-none focus:ring-outline-clr dark:bg-theme-hvr-clr dark:hover:bg-theme-clr dark:focus:ring-outline-clr transition-all scale-[1.0] focus:scale-[0.9]">View Docs</a>
+
+                <a href="{{ url_for('web_front.index') }}" class="py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-transparent rounded-lg border-[2px] border-theme-clr hover:bg-theme-clr hover:text-white focus:z-10 focus:ring-4 focus:ring-outline-clr dark:text-gray-400 dark:border-gray-600 transition-all scale-[1.0] focus:scale-[0.9]">View Website</a>
+            </div>
+        
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}

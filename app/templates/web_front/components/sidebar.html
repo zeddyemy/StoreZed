@@ -1,0 +1,38 @@
+<!-- Fixed sidebar -->
+<aside id="logo-sidebar"
+    class="fixed text-base top-0 left-0 z-40 w-64 md:w-2/12 h-screen pt-20 transition-transform -translate-x-full border-r md:translate-x-0 bg-gray-800 border-gray-700"
+    aria-label="Sidebar">
+    <div class="h-full px-4 pb-5 overflow-y-auto bg-gray-800">
+        <ul class="space-y-2 font-medium">
+            {% for nav_item in NAV_ITEMS %}
+            {% if nav_item.visible %}
+            
+            <li>
+                <a href="{{nav_item.link}}" class="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group">
+                    <i class="bx {{nav_item.icon_class}} flex-shrink-0 w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white text-2xl text-center my-auto"></i>
+                    <span class="flex-1 ms-3 whitespace-nowrap">{{nav_item.name}}</span>
+                </a>
+            </li>
+
+            {% endif %}
+            {% endfor %}
+
+            {% for category in ALL_CATEGORIES %}
+            <li>
+                <a href="#" class="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group">
+                    <i
+                        class="bx bxs-flag-alt flex-shrink-0 w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white"></i>
+                    <span class="flex-1 ms-3 whitespace-nowrap">{{category.name}}</span>
+                </a>
+            </li>
+            {% endfor %}
+            
+            <li class="hidden md:block">
+                <a href="#" class="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group">
+                    <i class="bx bx bx-arrow-back flex-shrink-0 w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white text-2xl text-center my-auto"></i>
+                    <span class="flex-1 ms-3 whitespace-nowrap">Collapse menu</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>

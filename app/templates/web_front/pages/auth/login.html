@@ -1,0 +1,38 @@
+{% extends 'web_front/base/auth_base.html' %}
+{% block title %}Login - {{ super() }}{% endblock %}
+
+{% block CSSandJS_Links %} {% endblock %}
+
+
+{% block content %}
+
+<!-- Main content -->
+<div class="form-wrapper h-full my-auto flex align-center justify-center">
+    <form method="post" class="form card" id="login-form" enctype="multipart/form-data"></form>
+    <form method="post" class="form card w-full md:w-96 xl:w-4/12 bg-gray-800/70 rounded-lg p-6 border border-gray-600" action="{{ url_for('web_front.login') }}" id="login-form" enctype="multipart/form-data">
+        <div class="card-body">
+            {% if 'csrf_token' in form %}
+            {{form.csrf_token}}
+            {% endif %}
+            <h3 class="form-heading mb-6 font-bold text-2xl"> Login </h3>
+            
+            <div class="form-group mb-6">
+                <label for="email_username" class="block mb-2 text-sm font-medium text-white">Email/Username</label>
+                {{ form.email_username(class_ = 'form-control shadow-sm-light bg-gray-700/80 border-2 focus:border-2 border-gray-600 text-white text-sm rounded-lg focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none', placeholder='example@mail.com', autofocus = true) }}
+                
+            </div>
+
+            <div class="form-group mb-6">
+                <label for="pwd">Password</label>
+                <div class="form-group">
+                    {{ form.pwd(class_ = 'form-control shadow-sm-light bg-gray-700/80 border-2 focus:border-2 border-gray-600 text-white text-sm rounded-lg focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none', placeholder='password', autofocus = true) }}
+                </div>
+            </div>
+
+            <input type="submit" value="Login" class="btn inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-theme-clr hover:bg-theme-hvr-clr cursor-pointer">
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

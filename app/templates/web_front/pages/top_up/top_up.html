@@ -1,0 +1,30 @@
+{% extends 'web_front/base/base.html' %}
+{% block title %}Dashboard - {{ super() }}{% endblock %}
+
+{% block content %}
+
+{% include 'web_front/components/wallet_balance.html' %}
+
+<section class="sec">
+    <div id="crypto-address-info"
+        class="card bg-black/70 text-white hover:bg-black/75 rounded-lg p-6 border border-gray-600 flex flex-col items-center justify-center gap-y-4">
+
+        <p class="text-lg font-semibold"> Deposit Bitcoin to this address. </p>
+
+        <div class="qr-code"></div>
+
+        <div class="address-info text-center">
+            <p class="crypto-address">
+                Address: bc1qprrekrxzs80kqdkz2tm9qmuhq663cqr6g8lfuu
+            </p>
+        </div>
+        
+        <div class="notice text-center">
+            <p> Bitcoin will be credited to this account will reflect after 2 confirmations. </p>
+            <p> For a smooth transaction please do not pay partially </p>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
