@@ -8,10 +8,14 @@ migrations_s/
 node_modules/
 .env
 .flaskenv
+instance/
+codebase.txt
 
 # Editor directories and files
 .vscode/
 .vscode/*
+.cursor/
+.cursor/*
 !.vscode/extensions.json
 .idea
 .DS_Store

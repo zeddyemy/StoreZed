@@ -31,6 +31,16 @@ class Role(db.Model):
     def __str__(self) -> str:
         return self.name.value.capitalize()
     
+    def update(self, commit=True, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        if commit:
+            db.session.commit()
+
+    def delete(self, commit=True):
+        db.session.delete(self)
+        if commit:
+            db.session.commit()
 
 class UserRole(db.Model):
     """Association object for AppUser and Role with additional metadata."""
@@ -126,6 +136,16 @@ class UserRole(db.Model):
         db.session.delete(user_role)
         db.session.commit()
 
+    def update(self, commit=True, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        if commit:
+            db.session.commit()
+
+    def delete(self, commit=True):
+        db.session.delete(self)
+        if commit:
+            db.session.commit()
 
 
 def migrate_user_roles():

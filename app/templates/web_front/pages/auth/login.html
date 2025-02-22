@@ -8,7 +8,6 @@
 
 <!-- Main content -->
 <div class="form-wrapper h-full my-auto flex align-center justify-center">
-    <form method="post" class="form card" id="login-form" enctype="multipart/form-data"></form>
     <form method="post" class="form card w-full md:w-96 xl:w-4/12 bg-gray-800/70 rounded-lg p-6 border border-gray-600" action="{{ url_for('web_front.login') }}" id="login-form" enctype="multipart/form-data">
         <div class="card-body">
             {% if 'csrf_token' in form %}

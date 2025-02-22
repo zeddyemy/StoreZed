@@ -51,6 +51,9 @@ class AppUser(db.Model, UserMixin):
     profile = db.relationship('Profile', back_populates="app_user", uselist=False, cascade="all, delete-orphan")
     address = db.relationship('Address', back_populates="app_user", uselist=False, cascade="all, delete-orphan")
     wallet = db.relationship('Wallet', back_populates="app_user", uselist=False, cascade="all, delete-orphan")
+    orders = db.relationship('Order', back_populates='app_user', lazy='dynamic')
+    payments = db.relationship('Payment', back_populates='app_user', lazy='dynamic')
+    subscriptions = db.relationship('Subscription', back_populates='app_user', lazy='dynamic')
     
     roles = db.relationship('UserRole', back_populates='user', foreign_keys='UserRole.app_user_id', cascade="all, delete-orphan") # roles assigned to the user.
     assigned_roles = db.relationship('UserRole', back_populates='assigner', foreign_keys='UserRole.assigner_id', cascade="all, delete-orphan") # roles that the user has assigned to others
@@ -88,6 +91,10 @@ class AppUser(db.Model, UserMixin):
             self = db.session.merge(self)
         return [str(user_role.role.name.value) for user_role in self.roles]
     
+    @property
+    def full_name(self):
+        return f"{self.profile.firstname} {self.profile.lastname}"
+    
     
     def __repr__(self):
         return f'<ID: {self.id}, username: {self.username}, email: {self.email}>'
@@ -112,14 +119,16 @@ class AppUser(db.Model, UserMixin):
         db.session.add(self)
         db.session.commit()
 
-    def update(self, **kwargs):
+    def update(self, commit=True, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        db.session.commit()
+        if commit:
+            db.session.commit()
 
-    def delete(self):
+    def delete(self, commit=True):
         db.session.delete(self)
-        db.session.commit()
+        if commit:
+            db.session.commit()
     
     def to_dict(self) -> dict:
         

@@ -7,7 +7,7 @@ Package: BitnShop
 """
 from flask import request
 from typing import List
-from functools import lru_cache
+from cachetools import cached, TTLCache
 
 from ...extensions import db
 from ...enums.payments import PaymentMethods
@@ -30,9 +30,12 @@ def get_default_setting(key: GeneralSettingsKeys) -> str:
     defaults = {
         GeneralSettingsKeys.SITE_TITLE: "My E-commerce Site",
         GeneralSettingsKeys.TIMEZONE: "UTC",
+        
+        GeneralSettingsKeys.CURRENCY: "NGN",
+        GeneralSettingsKeys.NUMBER_OF_DECIMALS: "2",
+        GeneralSettingsKeys.CURRENCY_POSITION: "left",
         GeneralSettingsKeys.THOUSAND_SEPARATOR: ",",
         GeneralSettingsKeys.DECIMAL_SEPARATOR: ".",
-        GeneralSettingsKeys.NUMBER_OF_DECIMALS: "2",
     }
     return defaults.get(key, "")  # Default to empty string
 
@@ -48,8 +51,10 @@ def get_all_general_settings() -> dict[str, str]:
     
     return {setting.key: setting.value for setting in general_settings}
 
+# Create a cache with a Time-To-Live (TTL) of 12 hour (43200 seconds)
+cache = TTLCache(maxsize=100, ttl=18000)
 
-@lru_cache(maxsize=1)  # Cache settings to optimize performance
+@cached(cache) # Cache settings to optimize performance
 def get_general_setting(key: GeneralSettingsKeys, default=None) -> str | None:
     """
     Retrieves a specific general setting value from the database.
@@ -90,6 +95,20 @@ def save_general_setting(key: GeneralSettingsKeys, value: str):
     db.session.commit()
     get_general_setting.cache_clear()  # Clears cache to reflect new values
 
+def get_currency_settings() -> tuple:
+    """Get all currency-related settings."""
+    return (
+        get_general_setting( GeneralSettingsKeys.CURRENCY, 'USD' ), # currency_code
+
+        get_general_setting( GeneralSettingsKeys.NUMBER_OF_DECIMALS, '2' ), # decimal_places
+
+        get_general_setting( GeneralSettingsKeys.CURRENCY_POSITION, 'left' ),
+
+        get_general_setting( GeneralSettingsKeys.THOUSAND_SEPARATOR, ','),
+
+        get_general_setting( GeneralSettingsKeys.DECIMAL_SEPARATOR, '.'),
+
+    )
 
 def get_payment_method_settings(method: PaymentMethods) -> dict:
     """
@@ -105,7 +124,7 @@ def get_payment_method_settings(method: PaymentMethods) -> dict:
     return {setting.key: setting.value for setting in settings}
 
 
-def get_payment_method_setting(method: PaymentMethods, key: PaymentMethodSettingKeys) -> str:
+def get_payment_method_setting(method: PaymentMethods, key: PaymentMethodSettingKeys) -> str | None:
     """
     Retrieve a specific payment method setting.
 
@@ -189,13 +208,24 @@ def get_active_payment_gateway() -> dict:
     Returns:
         dict: Contains 'provider' and relevant credentials.
     """
-    provider = get_payment_method_setting(PaymentMethods.GATEWAY, PaymentMethodSettingKeys.PROVIDER)
+    
+    provider_settings = get_payment_method_settings(PaymentMethods.GATEWAY)
+    provider = provider_settings.get("provider", "").lower()  # Force lowercase
     
     if not provider:
         return {}
-
-    credentials = {
-        "api_key": get_payment_method_setting(PaymentMethods.GATEWAY, PaymentMethodSettingKeys(f"{provider.upper()}_API_KEY"))
+    
+    provider_data = {
+        key: value for key, value in provider_settings.items() 
+        if key.startswith(provider) or key == "provider"
     }
+    
+    # Create the credentials dictionary
+    credentials = {
+        key.replace(f"{provider}_", ""): value  # Remove provider prefix
+        for key, value in provider_data.items() 
+        if key.startswith(provider)  # Only include keys starting with the provider
+    }
+    
 
     return {"provider": provider, "credentials": credentials}

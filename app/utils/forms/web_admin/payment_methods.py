@@ -15,7 +15,7 @@ from ....models.payment_gateway import PaymentGateway, PaymentGatewayName
 from ....enums.payments import PaymentMethods, PaymentGatewayName
 from ...helpers.settings import get_payment_method_settings
 from ...helpers.loggers import console_log
-from ...payments.payment_manager import get_payment_providers
+from ...payments.utils import get_payment_providers
 
 
 class BasePaymentMethodForm(FlaskForm):
@@ -87,11 +87,39 @@ class GatewayPaymentForm(BasePaymentMethodForm):
     """
     provider = SelectField("Select Payment Provider", choices=get_provider_form_choices(), validators=[DataRequired()], description=f"These providers provide merchants with the tools and services needed to accept online payments from local and international customers using Crypto, Mastercard, Visa, Verve Cards and Bank Accounts. Sign up for an account on either platforms, and get your API keys.")
     
+    bitpay_test_mode = BooleanField("Enable Test Mode", default=True)
     bitpay_api_key = StringField("BitPay API Key", validators=[Optional()])
     bitpay_test_api_key = StringField("BitPay Test API Key", validators=[Optional()])
     bitpay_secret_key = StringField("BitPay Secret Key", validators=[Optional()])
+    
+    flutterwave_test_mode = BooleanField("Enable Test Mode", default=True)
     flutterwave_api_key = StringField("Flutterwave API Key", validators=[Optional()])
+    flutterwave_secret_key = StringField("Flutterwave Secret Key", validators=[Optional()])
+    flutterwave_test_secret_key = StringField("Flutterwave Test Secret Key", validators=[Optional()])
+    flutterwave_public_key = StringField("Flutterwave Public Key", validators=[Optional()])
+    flutterwave_test_public_key = StringField("Flutterwave Test Public Key", validators=[Optional()])
+    
+    paystack_test_mode = BooleanField("Enable Test Mode", default=True)
     paystack_api_key = StringField("Paystack API Key", validators=[Optional()])
+    paystack_secret_key = StringField("Paystack Secret Key", validators=[Optional()])
+    paystack_test_secret_key = StringField("Paystack Test Secret Key", validators=[Optional()])
+    paystack_public_key = StringField("Paystack Public Key", validators=[Optional()])
+    paystack_test_public_key = StringField("Paystack Test Public Key", validators=[Optional()])
+    
+    def __init__(self, *args, **kwargs):
+        """
+        Handle boolean conversion for 'bitpay_test_mode'.
+        """
+        if "bitpay_test_mode" in kwargs and isinstance(kwargs["bitpay_test_mode"], str):
+            kwargs["bitpay_test_mode"] = kwargs["bitpay_test_mode"].lower() == "true"
+        
+        if "flutterwave_test_mode" in kwargs and isinstance(kwargs["flutterwave_test_mode"], str):
+            kwargs["flutterwave_test_mode"] = kwargs["flutterwave_test_mode"].lower() == "true"
+        
+        if "paystack_test_mode" in kwargs and isinstance(kwargs["paystack_test_mode"], str):
+            kwargs["paystack_test_mode"] = kwargs["paystack_test_mode"].lower() == "true"
+        
+        super().__init__(*args, **kwargs)
 
 
 

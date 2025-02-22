@@ -7,10 +7,11 @@ Package: BitnShop
 """
 from flask import Blueprint, render_template
 
-api_bp: Blueprint = Blueprint('api', __name__, url_prefix='/api')
-
 from ..controllers import BasicsController
 
+api_bp: Blueprint = Blueprint('api', __name__, url_prefix='/api')
+
+from . import (auth, categories, payments, products, settings, tags)
 
 @api_bp.route("/", methods=["GET"])
 def index():

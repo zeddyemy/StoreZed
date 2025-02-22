@@ -1,0 +1,20 @@
+{
+	"AED": {
+		"name": "United Arab Emirates Dirham",
+		"symbol": "د.إ",
+		"decimals": 2,
+		"symbol_position": "right"
+	},
+	"NGN": {
+		"name": "Nigerian Naira",
+		"symbol": "₦",
+		"decimals": 2,
+		"symbol_position": "left"
+	},
+	"USD": {
+		"name": "US Dollar",
+		"symbol": "$",
+		"decimals": 2,
+		"symbol_position": "left"
+	}
+}

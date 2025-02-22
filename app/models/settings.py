@@ -28,14 +28,16 @@ class GeneralSetting(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def update(self, **kwargs):
+    def update(self, commit=True, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        db.session.commit()
+        if commit:
+            db.session.commit()
 
-    def delete(self):
+    def delete(self, commit=True):
         db.session.delete(self)
-        db.session.commit()
+        if commit:
+            db.session.commit()
     
     def to_dict(self):
         return {

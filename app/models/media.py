@@ -14,6 +14,19 @@ class Media(db.Model):
     
     def get_path(self) -> str:
         return self.media_path
+    
+    def update(self, commit=True, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        
+        if commit:
+            db.session.commit()
+
+    def delete(self, commit=True):
+        db.session.delete(self)
+        
+        if commit:
+            db.session.commit()
 
     def to_dict(self) -> dict:
         return {

@@ -1,5 +1,6 @@
 import uuid
 from flask import request
+from sqlalchemy import inspect, or_
 from sqlalchemy.orm import backref
 
 from app.extensions import db
@@ -44,10 +45,23 @@ class Product(db.Model):
     categories = db.relationship('Category', secondary=product_category, backref=db.backref('products', lazy='dynamic'))
     
     
-
     def __repr__(self):
         return f'<Product ID: {self.id}, name: {self.name}, category Id: {self.category_id}>'
     
+    @staticmethod
+    def add_search_filters(query, search_term):
+        """
+        Adds search filters to a SQLAlchemy query.
+        """
+        if search_term:
+            search_term = f"%{search_term}%"
+            query = query.filter(
+                    or_(
+                        Product.name.ilike(search_term),
+                        Product.slug.ilike(search_term),
+                    )
+                )
+        return query
     
     @classmethod
     def create_product(cls, uuid, name, slug, user_id, commit=True, **kwargs):
@@ -72,9 +86,10 @@ class Product(db.Model):
             else:
                 setattr(product, key, value)
         
+        product = db.session.merge(product)
+        db.session.add(product)
+        
         if commit:
-            product = db.session.merge(product)
-            db.session.add(product)
             db.session.commit()
         
         return product
@@ -83,16 +98,18 @@ class Product(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def update(self, **kwargs):
+    def update(self, commit=True, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        db.session.commit()
+        if commit:
+            db.session.commit()
 
-    def delete(self):
+    def delete(self, commit=True):
         db.session.query(product_category).filter_by(product_id=self.id).delete()
         db.session.query(product_tag).filter_by(product_id=self.id).delete()
         db.session.delete(self)
-        db.session.commit()
+        if commit:
+            db.session.commit()
     
     def get_media(self):
         if self.media_id:
@@ -125,6 +142,21 @@ class Tag(db.Model):
     description = db.Column(db.String(255), nullable=True)
     slug = db.Column(db.String(), nullable=False, unique=True)
     
+    @staticmethod
+    def add_search_filters(query, search_term):
+        """
+        Adds search filters to a SQLAlchemy query.
+        """
+        if search_term:
+            search_term = f"%{search_term}%"
+            query = query.filter(
+                    or_(
+                        Tag.name.ilike(search_term),
+                        Tag.slug.ilike(search_term),
+                        Tag.description.ilike(search_term),
+                    )
+                )
+        return query
     
     @classmethod
     def create_tag(cls, name, slug, commit=True, **kwargs):
@@ -141,16 +173,18 @@ class Tag(db.Model):
         
         return tag
     
-    def update(self, **kwargs):
+    def update(self, commit=True, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        
-        db.session.merge(self)
-        db.session.commit()
+        if commit:
+            db.session.merge(self)
+            db.session.commit()
 
-    def delete(self):
+    def delete(self, commit=True):
         db.session.delete(self)
-        db.session.commit()
+        if commit:
+            db.session.commit()
+    
     
     def to_dict(self):
         return {

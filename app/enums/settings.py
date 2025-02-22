@@ -11,6 +11,9 @@ class GeneralSettingsKeys(Enum):
     TIMEZONE = "timezone"
     WEEK_STARTS_ON = "week_starts_on"
     
+    PLATFORM_URL = "platform_url"
+    SITE_URL = "site_url"
+    
     # Currency Settings
     CURRENCY = "currency"
     CURRENCY_POSITION = "currency_position"
@@ -52,8 +55,19 @@ class PaymentMethodSettingKeys(Enum):
     # Gateway settings
     PROVIDER = "provider"
     BITPAY_API_KEY = "bitpay_api_key"
+    
     FLUTTERWAVE_API_KEY = "flutterwave_api_key"
+    FLUTTERWAVE_SECRET_KEY = "flutterwave_secret_key"
+    FLUTTERWAVE_TEST_SECRET_KEY = "flutterwave_test_secret_key"
+    FLUTTERWAVE_PUBLIC_KEY = "flutterwave_public_key"
+    FLUTTERWAVE_TEST_PUBLIC_KEY = "flutterwave_test_public_key"
+    FLUTTERWAVE_SECRET_HASH = "flutterwave_secret_hash"
+    
     PAYSTACK_API_KEY = "paystack_api_key"
+    PAYSTACK_SECRET_KEY = "paystack_secret_key"
+    PAYSTACK_TEST_SECRET_KEY = "paystack_test_secret_key"
+    PAYSTACK_PUBLIC_KEY = "paystack_public_key"
+    PAYSTACK_TEST_PUBLIC_KEY = "paystack_test_public_key"
 
     def __str__(self):
         return self.value  # Ensures usage as strings in queries

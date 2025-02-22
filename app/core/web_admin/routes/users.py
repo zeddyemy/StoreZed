@@ -109,9 +109,8 @@ def add_new_user():
                 for field_name, error_messages in form.errors.items():
                     for err in error_messages:
                         if field_name == "csrf_token":
-                            err_msg = "Sorry, we could not add the user. Please Try Again."
-                            flash(err_msg, 'error')
-                            console_log('error', err)
+                            flash("Session expired. Please refresh the page.", "danger")
+                            console_log("error", err)
                             break
     
     return render_template('web_admin/pages/users/new_user.html', form=form)

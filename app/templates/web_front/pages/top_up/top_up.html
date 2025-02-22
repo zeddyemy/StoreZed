@@ -1,29 +1,69 @@
 {% extends 'web_front/base/base.html' %}
-{% block title %}Dashboard - {{ super() }}{% endblock %}
+{% block title %}Top Up Wallet - {{ super() }}{% endblock %}
 
 {% block content %}
 
+{% macro render_field(field) -%}
+    <div class="form-group !mb-0 sm:col-span-2" data-field="{{ field.name }}">
+        {% if field.type == "BooleanField" %}
+            <div class="theme-checkbox flex items-center gap-4">
+                {{ field(
+                    class="form-control text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2 border-outline-clr focus:ring-theme-clr focus:border-theme-clr p-2.5 outline-none bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white size-8 checked:bg-theme-clr",
+                    autofocus=false,
+                    id=field.id,
+                    **kwargs
+                ) }}
+                <label for="{{ field.id }}" class="block text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
+                    {{ field.label.text }}
+                </label>
+            </div>
+        {% elif field.type == "FileField" %}
+            <label for="{{ field.id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                {{ field.label.text }}
+            </label>
+            {{ field(
+                class="form-control block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400",
+                **kwargs
+            ) }}
+        {% else %}
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                    <div class="text-gray-500 dark:text-gray-400">
+                        {{ currency }}
+                    </div>
+                </div>
+                {{ field(
+                    class="form-control shadow-sm-light bg-gray-700/80 border-2 focus:border-2 border-gray-600 text-white text-sm rounded-lg focus:ring-theme-clr focus:border-theme-clr block w-full ps-14 p-2.5 placeholder-gray-400 outline-none",
+                    autofocus=true, id=field.id,
+                    **kwargs
+                ) }}
+            </div>
+        {% endif %}
+
+        {% if field.description %}
+            <small class="text-gray-400 block mt-1">{{ field.description }}</small>
+        {% endif %}
+
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <div class="alert alert-error form-error text-red-600 text-sm mt-1" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{%- endmacro %}
+
 {% include 'web_front/components/wallet_balance.html' %}
 
-<section class="sec">
-    <div id="crypto-address-info"
-        class="card bg-black/70 text-white hover:bg-black/75 rounded-lg p-6 border border-gray-600 flex flex-col items-center justify-center gap-y-4">
-
-        <p class="text-lg font-semibold"> Deposit Bitcoin to this address. </p>
-
-        <div class="qr-code"></div>
-
-        <div class="address-info text-center">
-            <p class="crypto-address">
-                Address: bc1qprrekrxzs80kqdkz2tm9qmuhq663cqr6g8lfuu
-            </p>
-        </div>
-        
-        <div class="notice text-center">
-            <p> Bitcoin will be credited to this account will reflect after 2 confirmations. </p>
-            <p> For a smooth transaction please do not pay partially </p>
-        </div>
-    </div>
+<section class="sec flex flex-col gap-4">
+    {% if gateway == "bitpay" %}
+        {% include 'web_front/pages/top_up/provider/bitpay.html' %}
+    {% elif gateway == "flutterwave" %}
+        {% include 'web_front/pages/top_up/provider/flutterwave.html' %}
+    {% else %}
+        <p>No active payment gateway available.</p>
+    {% endif %}
 </section>
 
 

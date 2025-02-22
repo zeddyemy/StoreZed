@@ -1,0 +1,28 @@
+<div id="flutterwave" class="flutterwave">
+    <div class="card bg-black/70 text-white hover:bg-black/75 rounded-lg p-6 border border-outline-clr flex flex-col items-center justify-center gap-y-6 max-w-screen-xl">
+        <div class="mx-auto max-w-screen-sm text-center">
+            <h1>Enter the amount you would like to Deposit</h1>
+        </div>
+
+        <form method="post" action="{% block form_action %} {{ url_for('web_front.top_up') }} {% endblock %}" class="pt-2" id="top-up-form" enctype="multipart/form-data">
+            {% if 'csrf_token' in form %}
+            {{form.csrf_token}}
+            {% endif %}
+            <div class="amount flex items-center gap-4">
+                {% for field in form %}
+                    {% if field.id not in ['submit', 'hidden_tag', 'csrf_token'] %}
+                        {{ render_field(field) }}
+                    {% endif %}
+                {% endfor %}
+    
+                <button type="submit" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white rounded-lg bg-theme-clr hover:bg-theme-hvr-clr focus:ring-4 focus:outline-none focus:ring-outline-clr transition-all scale-[1.0] focus:scale-[0.9]">{{ form.submit.label.text }}</button>
+            </div>
+        </form>
+
+        <div class="notice text-center">
+            <p> You'll be taken to a flutterwave screen to make your payments </p>
+            <p> The amount paid will reflect in your wallet balance once the payment has been confirmed. </p>
+            <p> For a smooth transaction please do not pay partially </p>
+        </div>
+    </div>
+</div>

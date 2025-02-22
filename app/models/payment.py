@@ -19,13 +19,20 @@ class Payment(db.Model):
     narration = db.Column(db.String(255), nullable=True)
     payment_method = db.Column(db.String(), nullable=False)  # 'wallet' or 'payment gateway(flutterwave)'
     status = db.Column(db.String(20), nullable=False, default="pending")  # Status of the payment request
+    meta_info = db.Column(db.JSON, default=dict)  # Store payment type and related data
     
     created_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow)
     updated_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow, onupdate=DateTimeUtils.aware_utcnow)
 
     # relationships
     user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
-    app_user = db.relationship('AppUser')
+    app_user = db.relationship('AppUser', back_populates='payments')
+    
+    order_id = db.Column(db.Integer(), db.ForeignKey('order.id'), nullable=True)
+    order = db.relationship('Order', back_populates='payment')
+    
+    subscription_id = db.Column(db.Integer(), db.ForeignKey('subscription.id'), nullable=True)
+    subscription = db.relationship('Subscription', back_populates='payment')
     
     def __repr__(self):
         return f'<ID: {self.id}, Amount: {self.amount}, Payment Method: {self.payment_method}>'
@@ -36,26 +43,30 @@ class Payment(db.Model):
     
     @classmethod
     def create_payment_record(cls, key, amount, payment_method, status, app_user, commit=True, **kwargs):
-        payment_record = cls(key=key, amount=amount, payment_method=payment_method, status=status, app_user=app_user)
+        payment_record = cls(key=key, amount=amount, payment_method=payment_method, status=str(status), app_user=app_user)
         
         # Set additional attributes from kwargs
         for key, value in kwargs.items():
             setattr(payment_record, key, value)
         
+        db.session.add(payment_record)
+        
         if commit:
-            db.session.add(payment_record)
             db.session.commit()
         
         return payment_record
     
-    def update(self, **kwargs):
+    def update(self, commit=True, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        db.session.commit()
+        
+        if commit:
+            db.session.commit()
     
-    def delete(self):
+    def delete(self, commit=True):
         db.session.delete(self)
-        db.session.commit()
+        if commit:
+            db.session.commit()
     
     def to_dict(self, user=False):
         user_info = {'user': self.app_user.to_dict()} if user else {'user_id': self.user_id} # optionally include user info in dict
@@ -80,9 +91,10 @@ class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     key = db.Column(db.String(80), unique=True, nullable=False) # Unique identifier for the financial transaction
     amount = db.Column(db.Numeric(10, 2), nullable=False)
-    transaction_type = db.Column(db.Enum(TransactionType), nullable=False)  # 'credit', 'debit', 'payment' or 'withdraw'
+    transaction_type = db.Column(db.String(), nullable=False) # 'credit', 'debit', 'payment' or 'withdraw'
     narration = db.Column(db.String(150), nullable=True)
     status = db.Column(db.String(80), nullable=False) # Status of the financial transaction
+    meta_info = db.Column(db.JSON, default=dict)  # Store addition info or related data
     
     created_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow)
     updated_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow, onupdate=DateTimeUtils.aware_utcnow)
@@ -100,8 +112,13 @@ class Transaction(db.Model):
     
     
     @classmethod
-    def create_transaction(cls, key, amount, transaction_type, narration, status, app_user, commit=True):
-        transaction = cls(key=key, amount=amount, transaction_type=transaction_type, narration=narration, status=status, app_user=app_user)
+    def create_transaction(cls, key, amount, transaction_type, narration, status, app_user, commit=True, **kwargs):
+        transaction = cls(key=key, amount=amount, transaction_type=str(transaction_type), narration=narration, status=str(status), app_user=app_user)
+        
+        # Set additional attributes from kwargs
+        for key, value in kwargs.items():
+            setattr(transaction, key, value)
+        
         
         db.session.add(transaction)
         
@@ -110,14 +127,17 @@ class Transaction(db.Model):
         
         return transaction
     
-    def update(self, **kwargs):
+    def update(self, commit=True, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        db.session.commit()
+        
+        if commit:
+            db.session.commit()
     
-    def delete(self):
+    def delete(self, commit=True):
         db.session.delete(self)
-        db.session.commit()
+        if commit:
+            db.session.commit()
     
     def to_dict(self, user=False):
         user_info = {'user': self.app_user.to_dict(),} if user else {'user_id': self.user_id} # optionally include user info in dict

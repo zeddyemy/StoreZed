@@ -1,4 +1,5 @@
-import random, string, logging, time
+import re, random, string, logging, time
+from typing import Any, Dict, List, Union
 from flask import current_app, abort, request, url_for
 from slugify import slugify
 
@@ -67,19 +68,52 @@ def int_or_none(s):
     except:
         return None
 
-
-def generate_random_string(length=8):
+def normalize_keys(data: Union[Dict[str, Any], List[Any], Any]) -> Union[Dict[str, Any], List[Any], Any]:
     """
-    Generates a random string of specified length, consisting of lowercase letters and digits.
+    Recursively normalizes keys in a dictionary or list to snake_case.
 
     Args:
-        length (int): The desired length of the random string.
+        data (Union[Dict[str, Any], List[Any], Any]): The input data to normalize. 
+            Can be a dictionary, list, or any other type.
 
     Returns:
-        str: A random string of the specified length.
+        Union[Dict[str, Any], List[Any], Any]: The normalized data with keys in snake_case.
+            If the input is not a dictionary or list, it is returned as-is.
+
+    Example:
+        >>> payload = {"firstName": "John", "lastName": "Doe", "address": {"streetAddress": "123 Main St"}}
+        >>> normalize_keys(payload)
+        {'first_name': 'John', 'last_name': 'Doe', 'address': {'street_address': '123 Main St'}}
+    """
+    if isinstance(data, dict):
+        normalized: Dict[str, Any] = {}
+        for key, value in data.items():
+            # Convert camelCase to snake_case
+            normalized_key = re.sub(r'(?<!^)(?=[A-Z])', '_', key).lower()
+            normalized[normalized_key] = normalize_keys(value)
+        return normalized
+    elif isinstance(data, list):
+        return [normalize_keys(item) for item in data]
+    else:
+        return data
+
+def generate_random_string(length: int = 8, prefix: str = '') -> str:
+    """
+    Generates a random string of specified length, consisting of lowercase letters and digits.
+    If a prefix is provided, it is prepended to the random string.
+    
+    Args:
+        length (int): The desired length of the random part of the string.
+        prefix (str, optional): An optional prefix to prepend to the random string.
+
+    Returns:
+        str: A string that starts with the prefix (if provided) followed by 'length' random characters.
+
     """
     characters = string.ascii_lowercase + string.digits
-    return ''.join(random.choice(characters) for _ in range(length))
+    random_part = ''.join(random.choice(characters) for _ in range(length))
+    
+    return f"{prefix}-{random_part}" if prefix else random_part
 
 
 def generate_random_number(length: int = 6) -> int:

@@ -38,14 +38,16 @@ class Wallet(db.Model):
     def __repr__(self):
         return f'<Wallet ID: {self.id}, balance: {self.balance}>'
     
-    def update(self, **kwargs):
+    def update(self, commit=True, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        db.session.commit()
-    
-    def delete(self):
+        if commit:
+            db.session.commit()
+
+    def delete(self, commit=True):
         db.session.delete(self)
-        db.session.commit()
+        if commit:
+            db.session.commit()
     
     def to_dict(self, user=False):
         user_info = {'user': self.app_user.to_dict(),} if user else {'user_id': self.user_id} # optionally include user info in dict

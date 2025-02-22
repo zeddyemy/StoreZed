@@ -128,6 +128,26 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const providerSelect = document.querySelector("select[name='provider']");
+            let currentTestModeCheckbox = null;
+            const testModeObserver = new MutationObserver(handleTestModeToggle);
+
+            const providerConfig = {
+                "bitpay": {
+                    testModeField: "bitpay_test_mode",
+                    testFields: ["bitpay_test_api_key", "bitpay_secret_key"],
+                    liveFields: ["bitpay_api_key"]
+                },
+                "flutterwave": {
+                    testModeField: "flutterwave_test_mode",
+                    testFields: ["flutterwave_test_secret_key", "flutterwave_test_public_key"],
+                    liveFields: ["flutterwave_secret_key", "flutterwave_public_key"]
+                },
+                "paystack": {
+                    testModeField: "paystack_test_mode",
+                    testFields: ["paystack_test_secret_key", "paystack_test_public_key"],
+                    liveFields: ["paystack_secret_key", "paystack_public_key"]
+                }
+            };
 
             
             function toggleGatewayFields() {
@@ -135,9 +155,17 @@
 
                 // Define which fields belong to which provider
                 const providerFields = {
-                    "bitpay": ["bitpay_api_key", "bitpay_test_api_key", "bitpay_secret_key"],
-                    "flutterwave": ["flutterwave_api_key"],
-                    "paystack": ["paystack_api_key"]
+                    "bitpay": [
+                        "bitpay_test_mode", "bitpay_api_key", "bitpay_test_api_key", "bitpay_secret_key"
+                    ],
+
+                    "flutterwave": [
+                        "flutterwave_test_mode", "flutterwave_api_key", "flutterwave_secret_key", "flutterwave_test_secret_key", "flutterwave_public_key", "flutterwave_test_public_key"
+                    ],
+
+                    "paystack": [
+                        "paystack_test_mode", "paystack_api_key"
+                    ]
                 };
 
                 // Hide all gateway fields first
@@ -146,21 +174,52 @@
                 });
 
                 // Show only fields relevant to the selected provider
-                if (selectedProvider in providerFields) {
-                    providerFields[selectedProvider].forEach(fieldName => {
-                        const targetField = document.querySelector(`[data-field='${fieldName}']`);
-                        if (targetField) {
-                            targetField.style.display = "block";
-                        }
+                if (providerConfig[selectedProvider]) {
+                    const { testModeField, testFields, liveFields } = providerConfig[selectedProvider];
+                    const testModeCheckbox = document.querySelector(`[name='${testModeField}']`);
+                    
+
+                    // Always show test mode toggle if exists
+                    const testModeContainer = document.querySelector(`[data-field='${testModeField}']`);
+
+                    if (testModeContainer) {
+                        testModeContainer.style.display = "block";
+                        setupTestModeListener(testModeCheckbox);
+                    }
+
+                    // Determine which fields to show based on test mode state
+                    const isTestMode = testModeCheckbox?.checked || false;
+                    const fieldsToShow = isTestMode ? testFields : liveFields;
+
+                    fieldsToShow.forEach(fieldName => {
+                        const field = document.querySelector(`[data-field='${fieldName}']`);
+                        if (field) field.style.display = "block";
                     });
                 }
             }
 
-            // Run on page load
-            toggleGatewayFields();
+            function setupTestModeListener(checkbox) {
+                // Remove previous listener if exists
+                if (currentTestModeCheckbox) {
+                    currentTestModeCheckbox.removeEventListener('change', handleTestModeToggle);
+                }
+                
+                // Add new listener
+                if (checkbox) {
+                    checkbox.addEventListener('change', handleTestModeToggle);
+                    currentTestModeCheckbox = checkbox;
+                }
+            }
 
-            // Run when provider selection changes
+            function handleTestModeToggle() {
+                toggleGatewayFields();
+            }
+
+            // Event listeners
             providerSelect.addEventListener("change", toggleGatewayFields);
+            
+            // Initial load
+            toggleGatewayFields();
         });
     </script>
 {% endif %}

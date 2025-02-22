@@ -1,6 +1,6 @@
 <section class="sec">
     <span
         class="ballance-info text-white bg-gray-800 hover:bg-gray-900 focus:outline-none font-medium rounded-full text-base px-4 py-2.5 text-center inline-block border border-gray-600">
-        Balance: {{ format_amount(CURRENT_USER.wallet.balance) }}
+        Balance: {{ format_monetary_value(CURRENT_USER.wallet.balance) }}
     </span>
 </section>

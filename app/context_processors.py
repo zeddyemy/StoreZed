@@ -4,7 +4,7 @@ from .utils.helpers.settings import get_all_general_settings
 from .utils.helpers.category import get_cached_categories
 from .utils.helpers.user import get_app_user_info
 from .utils.helpers.nav_bar import get_cached_nav_items
-from .utils.payments.utils import format_price
+from .utils.helpers.money import format_monetary_value
 from .extensions import db
 
 def app_context_Processor():
@@ -27,6 +27,6 @@ def app_context_Processor():
             "site_tagline": general_settings.get("tagline", ""),
             "currency": general_settings.get("currency", "NGN"),
         },
-        'format_price': format_price
+        'format_monetary_value': format_monetary_value
         
     }

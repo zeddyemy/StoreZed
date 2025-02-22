@@ -5,7 +5,7 @@ Copyright: © 2024 Emmanuel Olowu <zeddyemy@gmail.com>
 License: MIT, see LICENSE for more details.
 Package: BitnShop
 """
-
+from sqlalchemy import inspect, or_
 from sqlalchemy.orm import backref
 
 from ..extensions import db
@@ -26,11 +26,24 @@ class Category(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
     children = db.relationship('Category', backref=backref('parent', remote_side=[id]), lazy=True)
     
-
         
     def __repr__(self):
         return f'<Cat ID: {self.id}, name: {self.name}, parent: {self.parent_id}>'
     
+    @staticmethod
+    def add_search_filters(query, search_term):
+        """
+        Adds search filters to a SQLAlchemy query.
+        """
+        if search_term:
+            search_term = f"%{search_term}%"
+            query = query.filter(
+                    or_(
+                        Category.name.ilike(search_term),
+                        Category.slug.ilike(search_term),
+                    )
+                )
+        return query
     
     @classmethod
     def create_category(cls, name, slug, description='', media_id=None, commit=True, **kwargs):
@@ -40,8 +53,9 @@ class Category(db.Model):
         for key, value in kwargs.items():
             setattr(category, key, value)
         
+        db.session.add(category)
+        
         if commit:
-            db.session.add(category)
             db.session.commit()
         
         return category
@@ -54,14 +68,18 @@ class Category(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def update(self, **kwargs):
+    def update(self, commit=True, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        db.session.commit()
+        
+        if commit:
+            db.session.commit()
 
-    def delete(self):
+    def delete(self, commit=True):
         db.session.delete(self)
-        db.session.commit()
+        
+        if commit:
+            db.session.commit()
     
     def to_dict(self):
         return {
