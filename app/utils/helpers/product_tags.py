@@ -5,10 +5,12 @@ Copyright: © 2024 Emmanuel Olowu <zeddyemy@gmail.com>
 License: MIT, see LICENSE for more details.
 Package: BitnShop
 """
-
+from typing import Optional
 from collections import Counter
 from flask import request, jsonify, current_app
 from sqlalchemy import desc, func, text
+from sqlalchemy.orm import Query
+from flask_sqlalchemy.pagination import Pagination
 from flask_login import current_user
 
 from ...extensions import db
@@ -40,29 +42,47 @@ def get_tag_choices() -> list[tuple[str, str]]:
     return choices
 
 
-def fetch_all_tags(page_num: int=None, paginate: bool = False) -> list[Tag] | object:
-    ''' Gets all Tag rows from database
-    
-    This will return a pagination of all Tag rows from database.
-    
-    Alternatively, you can use get_sub_tags(id) to get the sub tags without pagination
+def fetch_all_tags(
+        page_num: Optional[int] = None,
+        paginate: Optional[bool] = False,
+        search_term: Optional[str] = None,
+    ) -> list[Tag] | Pagination:
+    '''
+    Get tags from the database with optional filtering and pagination.
+
+    Returns either a pagination object or list of Tag instances.
+
+    Args:
+        page_num: Page number for pagination (default from request if None)
+        paginate: Return pagination object when True
+        search_term: Filter term for tag search
+
+    Returns:
+        Pagination object or list of Tag instances
     '''
     
-    if not page_num:
+    # Get parameters from request if not provided
+    if page_num is None:
         page_num = request.args.get("page", 1, type=int)
     
-    all_tags = Tag.query.order_by(desc('id'))
+    if search_term is None:
+        search_term = request.args.get("search", "").strip()
+    
+    # Base query
+    query = Tag.query
+
+    # Apply search filters
+    query = Tag.add_search_filters(query, search_term)
+    
+    # Apply consistent ordering
+    query = query.order_by(Tag.id.desc())
     
     if paginate:
-        pagination = all_tags \
-            .order_by(Tag.id.desc()) \
-            .paginate(page=page_num, per_page=10, error_out=False)
+        pagination = query.paginate(page=page_num, per_page=10, error_out=False)
         
         return pagination
-    else:
-        all_tags = all_tags.all()
     
-    return all_tags
+    return query.all()
 
 
 def fetch_tag(identifier: int | str) -> Tag:

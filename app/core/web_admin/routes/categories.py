@@ -20,16 +20,21 @@ from ....utils.decorators import session_roles_required, web_admin_login_require
 @web_admin_login_required()
 def categories():
     page_num = request.args.get("page", 1, type=int)
+    search_term = request.args.get("search", "").strip()
     page_name = "categories"
     
     current_user_roles = current_user.role_names
     current_user_id = current_user.id
     
-    all_categories = fetch_all_categories(page_num=page_num, paginate=True)
+    pagination = fetch_all_categories(page_num=page_num, paginate=True, parent_only=False, search_term=search_term)
     
-    console_log('pagination', all_categories.items)
+    console_log('pagination', pagination.items)
     
-    return render_template('web_admin/pages/categories/categories.html', page_name=page_name, all_categories=all_categories)
+    # Extract paginated categories and pagination info
+    all_categories = pagination.items
+    total_pages = pagination.pages
+    
+    return render_template('web_admin/pages/categories/categories.html', all_categories=all_categories, pagination=pagination, total_pages=total_pages, search_term=search_term, page_name=page_name)
 
 
 @web_admin_bp.route("/categories/new", methods=['GET', 'POST'])

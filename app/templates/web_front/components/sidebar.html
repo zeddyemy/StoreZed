@@ -4,27 +4,55 @@
     aria-label="Sidebar">
     <div class="h-full px-4 pb-5 overflow-y-auto bg-gray-800">
         <ul class="space-y-2 font-medium">
-            {% for nav_item in NAV_ITEMS %}
-            {% if nav_item.visible %}
-            
-            <li>
-                <a href="{{nav_item.link}}" class="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group">
-                    <i class="bx {{nav_item.icon_class}} flex-shrink-0 w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white text-2xl text-center my-auto"></i>
-                    <span class="flex-1 ms-3 whitespace-nowrap">{{nav_item.name}}</span>
-                </a>
-            </li>
+            {% for nav_item in NAV_ITEMS if not nav_item.parent_id and nav_item.is_active %}
+                {% if nav_item.is_active %}
+                
+                
+                <li>
+                    <span class="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group" aria-controls="dropdown-{{nav_item.name}}-menu" data-collapse-toggle="dropdown-{{nav_item.name}}-menu">
+                        <a href="{{nav_item.link}}" class="flex items-center flex-1">
+                            <i class="bx {{nav_item.icon_class}} flex-shrink-0 w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white text-2xl text-center my-auto"></i>
+                            <span class="flex-1 ms-3 whitespace-nowrap">{{nav_item.name}}</span>
+                        </a>
+                        {% if nav_item.children %}
+                        <i class="bx bx-chevron-down w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white text-2xl text-center my-auto cursor-pointer" aria-hidden="true"></i>
+                        {% endif %}
+                    </span>
+                    {% if nav_item.children %}
+                    <ul id="dropdown-{{nav_item.name}}-menu" class="hidden py-2 space-y-2">
+                        {% for child in nav_item.children if child.is_active %}
+                        <li>
+                            <a href="{{ child.url }}" class="flex items-center w-full p-2 text-white transition duration-75 rounded-lg pl-11 group hover:bg-gray-700">{{ child.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
 
-            {% endif %}
+                {% endif %}
             {% endfor %}
 
             {% for category in ALL_CATEGORIES %}
-            <li>
-                <a href="#" class="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group">
-                    <i
-                        class="bx bxs-flag-alt flex-shrink-0 w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white"></i>
-                    <span class="flex-1 ms-3 whitespace-nowrap">{{category.name}}</span>
-                </a>
-            </li>
+                <li>
+                    <span class="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group" aria-controls="dropdown-{{category.name}}-menu" data-collapse-toggle="dropdown-{{category.name}}-menu">
+                        <a href="#" class="flex items-center flex-1">
+                            <i class="bx bxs-flag-alt flex-shrink-0 w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white text-2xl text-center my-auto"></i>
+                            <span class="flex-1 ms-3 whitespace-nowrap">{{category.name}}</span>
+                        </a>
+                        {% if category.children %}
+                        <i class="bx bx-chevron-down w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white text-2xl text-center my-auto cursor-pointer" aria-hidden="true"></i>
+                        {% endif %}
+                    </span>
+                    {% if category.children %}
+                    <ul id="dropdown-{{category.name}}-menu" class="hidden py-2 space-y-2">
+                        {% for child in category.children %}
+                        <li>
+                            <a href="{{ child.url }}" class="flex items-center w-full p-2 text-white transition duration-75 rounded-lg pl-11 group hover:bg-gray-700">{{ child.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
             {% endfor %}
             
             <li class="hidden md:block">

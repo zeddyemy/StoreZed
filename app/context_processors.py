@@ -1,5 +1,6 @@
 from flask_login import current_user
 
+from .utils.helpers.loggers import console_log
 from .utils.helpers.settings import get_all_general_settings
 from .utils.helpers.category import get_cached_categories
 from .utils.helpers.user import get_app_user_info

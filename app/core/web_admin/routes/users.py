@@ -28,9 +28,20 @@ def users():
     try:
         pagination = []
         page_num = request.args.get("page", 1, type=int)
-        all_users = AppUser.query.options(joinedload(AppUser.roles).joinedload(UserRole.role), joinedload(AppUser.profile), joinedload(AppUser.address))
+        search_term = request.args.get("search", "").strip()
         
-        pagination = all_users.paginate(page=page_num, per_page=10, error_out=False)
+        query = AppUser.query.options(joinedload(AppUser.roles).joinedload(UserRole.role), joinedload(AppUser.profile), joinedload(AppUser.address))
+        
+        # Apply search filters
+        query = AppUser.add_search_filters(query, search_term)
+        
+        pagination = query.paginate(page=page_num, per_page=10, error_out=False)
+        
+        console_log('pagination', pagination.items)
+    
+        # Extract paginated users and pagination info
+        all_users = pagination.items
+        total_pages = pagination.pages
     except (DataError, DatabaseError, OperationalError) as e:
         db.session.rollback()
         log_exception("Error connecting to the database", e)
@@ -41,7 +52,7 @@ def users():
     finally:
         db.session.close()
     
-    return render_template('web_admin/pages/users/users.html', all_users=pagination)
+    return render_template('web_admin/pages/users/users.html', all_users=all_users, pagination=pagination, total_pages=total_pages, search_term=search_term)
 
 
 @web_admin_bp.route("/users/new", methods=['GET', 'POST'])

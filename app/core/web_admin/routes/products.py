@@ -26,18 +26,23 @@ from ....utils.forms.web_admin.products import AddProductForm, generate_category
 @web_admin_login_required()
 def products():
     page_num = request.args.get("page", 1, type=int)
+    search_term = request.args.get("search", "").strip()
     
     current_user_roles = current_user.role_names
     current_user_id = current_user.id
     
     if 'trader' in current_user_roles:
-        all_products = fetch_all_products(user_id=current_user_id, page_num=page_num)
+        pagination = fetch_all_products(user_id=current_user_id, page_num=page_num, search_term=search_term)
     else:
-        all_products = fetch_all_products(page_num=page_num)
+        pagination = fetch_all_products(page_num=page_num, search_term=search_term)
         
-    console_log('pagination', all_products.items)
+    console_log('pagination', pagination.items)
     
-    return render_template('web_admin/pages/products/products.html', all_products=all_products)
+    # Extract paginated products and pagination info
+    all_products = pagination.items
+    total_pages = pagination.pages
+    
+    return render_template('web_admin/pages/products/products.html', all_products=all_products, pagination=pagination, total_pages=total_pages, search_term=search_term)
 
 @web_admin_bp.route("/products/new", methods=['GET', 'POST'])
 @web_admin_login_required()

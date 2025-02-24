@@ -7,6 +7,7 @@ Package: BitnShop
 """
 from sqlalchemy import inspect, or_
 from sqlalchemy.orm import backref
+from sqlalchemy.orm import Query
 
 from ..extensions import db
 from .media import Media
@@ -31,7 +32,7 @@ class Category(db.Model):
         return f'<Cat ID: {self.id}, name: {self.name}, parent: {self.parent_id}>'
     
     @staticmethod
-    def add_search_filters(query, search_term):
+    def add_search_filters(query: Query, search_term: str) -> Query:
         """
         Adds search filters to a SQLAlchemy query.
         """
@@ -81,11 +82,14 @@ class Category(db.Model):
         if commit:
             db.session.commit()
     
-    def to_dict(self):
-        return {
+    def to_dict(self, include_children=False) -> dict[str, any]:
+        data = {
             'id': self.id,
             'name': self.name,
             'description': self.description,
             'slug': self.slug,
             }
+        if include_children:
+            data['children'] = [child.to_dict() for child in self.children]
+        return data
 

@@ -1,7 +1,7 @@
-from datetime import datetime, timedelta
+from sqlalchemy.orm import Query
 
 from ..extensions import db
-from ..utils.date_time import DateTimeUtils
+from ..utils.date_time import DateTimeUtils, timedelta
 
 class SubscriptionPlan(db.Model):
     """

@@ -12,6 +12,7 @@ Package: BitnShop
 """
 from sqlalchemy import or_
 from sqlalchemy.orm import backref
+from sqlalchemy.orm import Query
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -100,16 +101,22 @@ class AppUser(db.Model, UserMixin):
         return f'<ID: {self.id}, username: {self.username}, email: {self.email}>'
     
     @staticmethod
-    def add_search_filters(query, search_term):
+    def add_search_filters(query: Query, search_term: str) -> Query:
         """
         Adds search filters to a SQLAlchemy query.
         """
         if search_term:
             search_term = f"%{search_term}%"
+            
+            # Join the Profile table using outerjoin to include users without a profile
+            query = query.outerjoin(AppUser.profile)
+            
             query = query.filter(
                     or_(
                         AppUser.username.ilike(search_term),
-                        AppUser.email.ilike(search_term)
+                        AppUser.email.ilike(search_term),
+                        Profile.firstname.ilike(search_term),
+                        Profile.lastname.ilike(search_term)
                     )
                 )
         return query

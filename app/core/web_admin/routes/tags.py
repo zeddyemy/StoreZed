@@ -18,16 +18,21 @@ from ....utils.decorators import session_roles_required, web_admin_login_require
 @web_admin_login_required()
 def tags():
     page_num = request.args.get("page", 1, type=int)
+    search_term = request.args.get("search", "").strip()
     page_name = "tags"
     
     current_user_roles = current_user.role_names
     current_user_id = current_user.id
     
-    all_tags = fetch_all_tags(page_num=page_num, paginate=True)
+    pagination = fetch_all_tags(page_num=page_num, paginate=True, search_term=search_term)
     
-    console_log('pagination', all_tags.items)
+    console_log('pagination', pagination.items)
     
-    return render_template('web_admin/pages/tags/tags.html', page_name=page_name, all_tags=all_tags)
+    # Extract paginated tags and pagination info
+    all_tags = pagination.items
+    total_pages = pagination.pages
+    
+    return render_template('web_admin/pages/tags/tags.html', all_tags=all_tags, pagination=pagination, total_pages=total_pages, search_term=search_term, page_name=page_name)
 
 
 @web_admin_bp.route("/tags/new", methods=['GET', 'POST'])

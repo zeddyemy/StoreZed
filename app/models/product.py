@@ -2,6 +2,7 @@ import uuid
 from flask import request
 from sqlalchemy import inspect, or_
 from sqlalchemy.orm import backref
+from sqlalchemy.orm import Query
 
 from app.extensions import db
 from .media import Media
@@ -49,7 +50,7 @@ class Product(db.Model):
         return f'<Product ID: {self.id}, name: {self.name}, category Id: {self.category_id}>'
     
     @staticmethod
-    def add_search_filters(query, search_term):
+    def add_search_filters(query: Query, search_term: str) -> Query:
         """
         Adds search filters to a SQLAlchemy query.
         """
@@ -143,7 +144,7 @@ class Tag(db.Model):
     slug = db.Column(db.String(), nullable=False, unique=True)
     
     @staticmethod
-    def add_search_filters(query, search_term):
+    def add_search_filters(query: Query, search_term: str) -> Query:
         """
         Adds search filters to a SQLAlchemy query.
         """

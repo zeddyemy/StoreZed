@@ -1,4 +1,5 @@
 from enum import Enum
+from sqlalchemy.orm import Query
 
 from ..extensions import db
 from ..utils.helpers.basics import generate_random_string

@@ -1,0 +1,17 @@
+<div class="h-max flex grow align-center justify-center text-gray-900 dark:text-white">
+    <div id="no-data" class="card self-center w-full md:w-96 xl:w-6/12 p-5 py-16 rounded-lg bg-while flex flex-col gap-y-6 items-center justify-center text-center shadow border border-gray-200 dark:border-gray-700">
+        <h1 class="text-4xl font-bold">No search results for  "{{ search_term }}" </h1>
+
+        <p> Sorry, but nothing matched your search terms. Please try again with some different keywords. </p>
+
+        <div class="search-form">
+            <form method="GET" action="{{ data_in_db_url }}" class="flex items-center gap-x-4">
+                <input type="text" id="table-search-products" name=search
+                    class="block p-2 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="What would you like to find?" value="">
+                    <button type="submit" class="btn inline-flex items-center px-6 py-2 text-sm font-medium text-center text-white rounded-lg bg-theme-clr hover:bg-theme-hvr-clr">Search</button>
+            </form>
+
+        </div>
+    </div>
+</div>

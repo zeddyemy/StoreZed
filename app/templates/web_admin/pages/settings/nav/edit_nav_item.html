@@ -1,0 +1,14 @@
+{% extends 'web_admin/pages/settings/nav/add_nav_item.html' %}
+
+{% block title %}Edit Nav Item{% endblock %}
+
+{% block form_title %}Edit Nav Item{% endblock %}
+{% block form_tagline %} Edit the tag and update it on this site. {% endblock %}
+
+{% block form_action %} {{ url_for('web_admin.edit_nav_item', nav_id = nav_item.id) }} {% endblock %}
+
+{% block form_btn_txt %} Update Tag {% endblock %}
+
+{% block form_content %}
+    {{ super() }}
+{% endblock %}

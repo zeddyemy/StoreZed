@@ -1,7 +1,9 @@
 <div class="h-max flex grow align-center justify-center text-gray-900 dark:text-white">
-    <div id="no-data" class="card self-center w-full md:w-96 xl:w-4/12 rounded-lg bg-while dark:border-gray-700 flex flex-col gap-y-3 items-center justify-center">
+    <div id="no-data" class="card self-center w-full md:w-96 xl:w-6/12 p-5 py-16 rounded-lg bg-while flex flex-col gap-y-6 items-center justify-center text-center shadow border border-gray-200 dark:border-gray-700">
         <h1 class="text-4xl font-bold">No {{ data_in_db }} yet</h1>
+
         <p class="">Use the button below to add a new {{ data_in_db }}</p>
+        
         <a href="{{ data_in_db_url }}" class="btn inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white rounded-lg bg-theme-clr hover:bg-theme-hvr-clr">Add New <span class="ml-1 hidden md:inline"> {{ data_in_db }} </span></a>
     </div>
 </div>

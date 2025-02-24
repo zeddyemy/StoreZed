@@ -30,6 +30,6 @@ def create_db_defaults(app: Flask) -> None:
     with app.app_context():
         create_roles()
         create_default_super_admin()
-        create_nav_items(True)
+        create_nav_items()
         initialize_settings()
         initialize_payment_method_settings()

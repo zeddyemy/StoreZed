@@ -9,6 +9,8 @@ Package: BitnShop
 import os, sys
 from threading import Thread
 from sqlalchemy import desc
+from sqlalchemy.orm import Query
+from flask_sqlalchemy.pagination import Pagination # Import Pagination if needed
 from werkzeug.datastructures import FileStorage
 from flask import Flask, request, jsonify, current_app
 from cachetools import cached, TTLCache
@@ -44,38 +46,61 @@ def get_category_choices() -> list[tuple[str, str]]:
     
     return choices
 
-def fetch_all_categories(cat_id: int=None, page_num: int=None, paginate: bool = False) -> list[Category] | object:
-    ''' Gets all Category rows from database
+def fetch_all_categories(
+        cat_id: int | None = None,
+        page_num: int | None = None,
+        paginate: bool = False,
+        parent_only: bool = True,
+        search_term: str | None = "",
+    ) -> list[Category]:
+    ''' Get categories from the database with optional filtering and pagination.
     
-    This will return a pagination of all Category rows from database.
-    :param cat_id: The ID of a Category. if cat_id is passed, it will return the sub categories of the category
+    Returns either a pagination object or list of Category instances.
+    When cat_id is provided, returns subcategories of the specified category.
     
-    Alternatively, you can use get_sub_categories(id) to get the sub categories without pagination
+    Args:
+        cat_id: Parent category ID to get subcategories
+        page_num: Page number for pagination (default from request if None)
+        paginate: Return pagination object when True
+        parent_only: Only return top-level categories when no cat_id specified
+        search_term: Filter term for category search
+
+    Returns:
+        Pagination object or list of Category instances
     '''
     
-    if not page_num:
+    # Get parameters from request if not provided
+    if page_num is None:
         page_num = request.args.get("page", 1, type=int)
     
-    if not cat_id:
-        all_categories = Category.query.order_by(desc('id'))
-    elif cat_id:
-        all_categories = Category.query.filter(Category.parent_id == cat_id).order_by(desc('id'))
+    if search_term is None:
+        search_term = request.args.get("search", "").strip()
+
+    query: Query = Category.query
     
+    # Apply parent category filters
+    if cat_id is not None:
+        query = query.filter(Category.parent_id == cat_id)
+    elif parent_only:
+        query = query.filter(Category.parent_id == None)
+    
+    # Apply search filters
+    query = Category.add_search_filters(query, search_term)
+
+    # Apply consistent ordering
+    query = query.order_by(Category.id.desc())
+    
+    # Execute query with/without pagination
     if paginate:
-        RESULTS_PER_PAGE = int('10')
-        pagination = all_categories \
-            .order_by(Category.id.desc()) \
-            .paginate(page=page_num, per_page=RESULTS_PER_PAGE, error_out=False)
-        
+        pagination = query.paginate(page=page_num, per_page=10, error_out=False)
         return pagination
-    else:
-        all_categories = all_categories.all()
     
-    return all_categories
+    return query.all()
+
 
 @cached(cache)
-def get_cached_categories() -> list[dict[str, str]]:
-    return [cat.to_dict() for cat in fetch_all_categories()]
+def get_cached_categories(parent_only=True) -> list[dict[str, str]]:
+    return [cat.to_dict(include_children=True) for cat in fetch_all_categories(parent_only=True)]
 
 def fetch_category(identifier: int | str) -> Category:
     category = None

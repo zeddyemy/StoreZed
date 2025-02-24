@@ -10,4 +10,4 @@ from flask import Blueprint, render_template
 
 web_admin_bp: Blueprint = Blueprint('web_admin', __name__, url_prefix='/shop-admin')
 
-from . import home, auth, users, products, categories, tags, settings
+from . import home, auth, users, products, categories, tags, settings, navigation

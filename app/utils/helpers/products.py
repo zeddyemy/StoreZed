@@ -7,8 +7,11 @@ Package: BitnShop
 """
 
 import sys
+from typing import Optional
 from flask import request, jsonify, current_app
 from sqlalchemy import desc, func, text
+from sqlalchemy.orm import Query
+from flask_sqlalchemy.pagination import Pagination
 from flask_login import current_user
 
 from ...extensions import db
@@ -20,27 +23,68 @@ from .basics import generate_slug
 from .loggers import log_exception, console_log
 from .product_tags import save_tags
 
-def fetch_all_products(user_id: int=None, cat_id:int=None, page_num:int=None, json=False):
+
+def fetch_all_products(
+        user_id: Optional[int] = None,
+        cat_id: Optional[int] = None,
+        page_num: Optional[int] = None,
+        search_term: Optional[str] = None,
+        paginate: bool = True,
+    ) -> Pagination | list[Product]:
     """
-    Gets all Products rows from database
+    Get products from the database with optional filtering and pagination.
+    
+    Returns either a pagination object or list of Product instances.
+    Eager loads categories and tags relationships.
+
+    Args:
+        user_id: Filter products by owner user ID
+        cat_id: Filter products by category ID
+        page_num: Page number for pagination (default from request if None)
+        search_term: Filter term for product search
+        paginate: Return pagination object when True
+
+    Returns:
+        Pagination object or list of Product instances
     """
     if not page_num:
         page_num = request.args.get("page", 1, type=int)
     
-    if user_id and cat_id:
-        all_products = None #get_products_by_category(cat_id).filter_by(user_id=user_id)
-    elif user_id:
-        all_products = Product.query.options(db.selectinload(Product.categories), db.selectinload(Product.tags)).filter_by(user_id=user_id)
-    elif cat_id:
-        all_products = None #get_products_by_category(cat_id)
-    else:
-        all_products = Product.query.options(db.selectinload(Product.categories), db.selectinload(Product.tags)).order_by(desc('id'))
+    if not search_term:
+        search_term = request.args.get("search", "").strip()
     
-    pagination = all_products.paginate(page=page_num, per_page=10, error_out=False)
+    # Base query with eager loading
+    query: Query = Product.query.options(
+        db.selectinload(Product.categories),
+        db.selectinload(Product.tags)
+    )
     
-    return pagination
+    # Apply combined filters
+    if user_id is not None and cat_id is not None:
+        query = query.filter(
+            Product.user_id == user_id,
+            Product.category_id == cat_id
+        )
+    elif user_id is not None:
+        query = query.filter_by(user_id=user_id)
+    elif cat_id is not None:
+        query = query.filter_by(category_id=cat_id)
+    
+    # Apply search filters
+    query = Product.add_search_filters(query, search_term)
+    
+    # Apply consistent ordering
+    query = query.order_by(Product.id.desc())
+    
+    # Execute query with/without pagination
+    if paginate:
+        pagination: Pagination = query.paginate(page=page_num, per_page=10, error_out=False)
+        return pagination
+    
+    return query.all()
 
-def fetch_product(identifier: int | str) -> object:
+
+def fetch_product(identifier: int | str) -> Product:
     product = None
     try:
         # Check if product_id_key is an integer

@@ -1,5 +1,6 @@
 from decimal import Decimal
 from typing import Optional
+from sqlalchemy.orm import Query
 
 from ..extensions import db
 from ..utils.date_time import DateTimeUtils

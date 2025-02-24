@@ -1,5 +1,6 @@
 from enum import Enum
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Query
 
 from ..extensions import db
 from .user import AppUser
