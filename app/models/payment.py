@@ -29,8 +29,13 @@ class Payment(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     app_user = db.relationship('AppUser', back_populates='payments')
     
-    order_id = db.Column(db.Integer(), db.ForeignKey('order.id'), nullable=True)
-    order = db.relationship('Order', back_populates='payment')
+    # NOTE: Current payment system assumes 1:1 relationship with customer order
+    # To extend later, to have one-to-many relationship.
+    # making a customer order have many payments. to address concerns like:
+    # - Payment history. 
+    # - Split payments.
+    order_id = db.Column(db.Integer(), db.ForeignKey('customer_order.id'), nullable=True)
+    customer_order = db.relationship('CustomerOrder', back_populates='payment')
     
     subscription_id = db.Column(db.Integer(), db.ForeignKey('subscription.id'), nullable=True)
     subscription = db.relationship('Subscription', back_populates='payment')

@@ -11,19 +11,19 @@ from ..utils.date_time import DateTimeUtils, datetime
 
 
 # association table for the many-to-many relationship between products and categories
-product_category = db.Table('product_category',
-    db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True),
-    db.Column('category_id', db.Integer, db.ForeignKey('category.id'), primary_key=True)
+product_category = db.Table("product_category",
+    db.Column("product_id", db.Integer, db.ForeignKey("product.id"), primary_key=True),
+    db.Column("category_id", db.Integer, db.ForeignKey("category.id"), primary_key=True)
 )
 
 # association table for the many-to-many relationship between products and tags
-product_tag = db.Table('product_tag',
-    db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True),
-    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True)
+product_tag = db.Table("product_tag",
+    db.Column("product_id", db.Integer, db.ForeignKey("product.id"), primary_key=True),
+    db.Column("tag_id", db.Integer, db.ForeignKey("tag.id"), primary_key=True)
 )
 
 class Product(db.Model):
-    __tablename__ = 'product'
+    __tablename__ = "product"
 
     id = db.Column(db.Integer, primary_key=True)
     uuid = db.Column(db.String(36), unique=True, nullable=False, default=uuid.uuid4)
@@ -34,20 +34,23 @@ class Product(db.Model):
     sizes = db.Column(db.String(300), nullable=True)
     colors = db.Column(db.String(), nullable=True)
     slug = db.Column(db.String(), nullable=False, unique=True)
-    pub_status = db.Column(db.String(), nullable=False, default='draft')
+    pub_status = db.Column(db.String(), nullable=False, default="draft")
     date_created = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow)
+    created_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow)
+    updated_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow, onupdate=DateTimeUtils.aware_utcnow)
     
-    media_id = db.Column(db.Integer, db.ForeignKey('media.id'), nullable=True)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id', ondelete='CASCADE'), nullable=True,)
-    user_id = db.Column(db.Integer, db.ForeignKey('app_user.id'), nullable=False)
+    media_id = db.Column(db.Integer, db.ForeignKey("media.id"), nullable=True)
+    category_id = db.Column(db.Integer, db.ForeignKey("category.id", ondelete="CASCADE"), nullable=True,)
+    user_id = db.Column(db.Integer, db.ForeignKey("app_user.id"), nullable=False)
     
-    app_user = db.relationship('AppUser', backref=db.backref('products', lazy='dynamic'))
-    tags = db.relationship('Tag', secondary=product_tag, backref=db.backref('products', lazy='dynamic'))
-    categories = db.relationship('Category', secondary=product_category, backref=db.backref('products', lazy='dynamic'))
+    app_user = db.relationship("AppUser", backref=db.backref("products", lazy="dynamic"))
+    tags = db.relationship("Tag", secondary=product_tag, backref=db.backref("products", lazy="dynamic"))
+    categories = db.relationship("Category", secondary=product_category, backref=db.backref("products", lazy="dynamic"))
+    order_items = db.relationship("OrderItem", back_populates="product")
     
     
     def __repr__(self):
-        return f'<Product ID: {self.id}, name: {self.name}, category Id: {self.category_id}>'
+        return f"<Product ID: {self.id}, name: {self.name}, category Id: {self.category_id}>"
     
     @staticmethod
     def add_search_filters(query: Query, search_term: str) -> Query:
@@ -71,17 +74,17 @@ class Product(db.Model):
         # Set additional attributes from kwargs
         for key, value in kwargs.items():
             
-            if key == 'tags' and value:
+            if key == "tags" and value:
                 if isinstance(value, (list, tuple)):
                     product.tags.extend(value)
                 else:
                     product.tags.append(value)
-            elif key == 'categories' and value:
+            elif key == "categories" and value:
                 if isinstance(value, (list, tuple)):
-                    console_log('categories', value)
-                    console_log('product.categories', product.categories)
+                    console_log("categories", value)
+                    console_log("product.categories", product.categories)
                     product.categories.extend(value)
-                    console_log('product.categories after', product.categories)
+                    console_log("product.categories after", product.categories)
                 else:
                     product.categories.append(value)
             else:
@@ -124,20 +127,24 @@ class Product(db.Model):
     
     def to_dict(self):
         return {
-            'id': self.id,
-            'name': self.name,
-            'description': self.description,
-            'sellingPrice': self.selling_price,
-            'actualPrice': self.actual_price,
-            'sizes': self.sizes,
-            'colors': self.colors,
-            'slug': self.slug,
-            'category_id': self.category_id
+            "id": self.id,
+            "uuid": self.uuid,
+            "name": self.name,
+            "description": self.description,
+            "sellingPrice": self.selling_price,
+            "actualPrice": self.actual_price,
+            "sizes": self.sizes,
+            "colors": self.colors,
+            "slug": self.slug,
+            "pub_status": self.pub_status,
+            "category_id": self.category_id,
+            "created_at": self.created_at.strftime("%b %d, %Y - %I:%M %p"),
+            "updated_at": self.updated_at.strftime("%b %d, %Y - %I:%M %p"),
         }
 
 
 class Tag(db.Model):
-    __tablename__ = 'tag'
+    __tablename__ = "tag"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
     description = db.Column(db.String(255), nullable=True)
@@ -189,16 +196,16 @@ class Tag(db.Model):
     
     def to_dict(self):
         return {
-            'id': self.id,
-            'name': self.name,
-            'description': self.description,
-            'slug': self.slug,
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "slug": self.slug,
         }
 
 
 class productVariations(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+    product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
     name = db.Column(db.String(100), nullable=False)
     selling_price = db.Column(db.Integer, nullable=True)
     img_url = db.Column(db.String(), nullable=True)
@@ -215,10 +222,10 @@ class productVariations(db.Model):
     
     def to_dict(self):
         return {
-            'id': self.id,
-            'name': self.name,
-            'selling_price': self.selling_price,
-            'img_url': self.img_url,
-            'product_id': self.product_id
+            "id": self.id,
+            "name": self.name,
+            "selling_price": self.selling_price,
+            "img_url": self.img_url,
+            "product_id": self.product_id
         }
 

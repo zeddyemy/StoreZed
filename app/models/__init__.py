@@ -18,7 +18,7 @@ from .role import Role, UserRole,  user_roles
 from .wallet import Wallet
 from .category import Category
 from .product import Product, Tag, product_category, product_tag, productVariations
-from .order import Order, OrderItem
+from .order import CustomerOrder, OrderItem
 from .payment import Payment, Transaction
 from .subscription import Subscription, SubscriptionPlan
 from .nav import NavigationBarItem, create_nav_items

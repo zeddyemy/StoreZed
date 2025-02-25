@@ -9,6 +9,7 @@ class PaymentMethods(Enum):
     CHECK = "check"
     COD = "cod"
     GATEWAY = "gateway"
+    WALLET = "wallet"
 
     def __str__(self):
         return self.value  # Returns "bacs", "check", etc.

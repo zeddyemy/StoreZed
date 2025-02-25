@@ -11,8 +11,8 @@ License: MIT, see LICENSE for more details.
 Package: BitnShop
 """
 from sqlalchemy import or_
-from sqlalchemy.orm import backref
-from sqlalchemy.orm import Query
+from sqlalchemy.orm import Query, backref
+from sqlalchemy import Index, CheckConstraint
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -52,7 +52,7 @@ class AppUser(db.Model, UserMixin):
     profile = db.relationship('Profile', back_populates="app_user", uselist=False, cascade="all, delete-orphan")
     address = db.relationship('Address', back_populates="app_user", uselist=False, cascade="all, delete-orphan")
     wallet = db.relationship('Wallet', back_populates="app_user", uselist=False, cascade="all, delete-orphan")
-    orders = db.relationship('Order', back_populates='app_user', lazy='dynamic')
+    customer_orders = db.relationship('CustomerOrder', back_populates='app_user', lazy='dynamic')
     payments = db.relationship('Payment', back_populates='app_user', lazy='dynamic')
     subscriptions = db.relationship('Subscription', back_populates='app_user', lazy='dynamic')
     
@@ -189,6 +189,11 @@ class Profile(db.Model):
     
     user_id = db.Column(db.Integer, db.ForeignKey('app_user.id', ondelete='CASCADE'), nullable=False,)
     app_user = db.relationship('AppUser', back_populates="profile")
+    
+    __table_args__ = (
+        Index('ix_profile_firstname_trgm', 'firstname', postgresql_using='gin', postgresql_ops={'firstname': 'gin_trgm_ops'}),
+        Index('ix_profile_lastname_trgm', 'lastname', postgresql_using='gin', postgresql_ops={'lastname': 'gin_trgm_ops'}),
+    )
     
     def __repr__(self):
         return f'<profile ID: {self.id}, name: {self.firstname}>'

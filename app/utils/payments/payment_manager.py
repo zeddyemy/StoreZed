@@ -18,7 +18,7 @@ from ..helpers.site import get_site_url, get_platform_url
 from ..helpers.loggers import log_exception, console_log
 from ..decorators.retry import retry
 from ...enums import PaymentGatewayName, PaymentStatus, OrderStatus, PaymentType, GeneralSettingsKeys
-from ...models import AppUser, Payment, Transaction, Order, Subscription
+from ...models import AppUser, Payment, Transaction, CustomerOrder, Subscription
 
 
 class PaymentManager:
@@ -315,7 +315,7 @@ class PaymentManager:
                 elif payment_type == str(PaymentType.ORDER_PAYMENT):
                     order_id = payment.meta_info.get('order_id')
                     if order_id:
-                        order: Order = Order.query.get(order_id)
+                        order: CustomerOrder = CustomerOrder.query.get(order_id)
                         order.update(status=OrderStatus.PAID)
                 
                 elif payment_type == str(PaymentType.SUBSCRIPTION):

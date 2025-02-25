@@ -15,7 +15,7 @@ from .product import Product, product_category
 from ..utils.date_time import DateTimeUtils, datetime
 
 class Category(db.Model):
-    __tablename__ = 'category'
+    __tablename__ = "category"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
@@ -23,13 +23,13 @@ class Category(db.Model):
     slug = db.Column(db.String(), nullable=False, unique=True)
     date_created = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow)
     
-    media_id = db.Column(db.Integer, db.ForeignKey('media.id'), nullable=True)
-    parent_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
-    children = db.relationship('Category', backref=backref('parent', remote_side=[id]), lazy=True)
+    media_id = db.Column(db.Integer, db.ForeignKey("media.id"), nullable=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=True)
+    children = db.relationship("Category", backref=backref("parent", remote_side=[id]), lazy=True)
     
         
     def __repr__(self):
-        return f'<Cat ID: {self.id}, name: {self.name}, parent: {self.parent_id}>'
+        return f"<Cat ID: {self.id}, name: {self.name}, parent: {self.parent_id}>"
     
     @staticmethod
     def add_search_filters(query: Query, search_term: str) -> Query:
@@ -47,7 +47,7 @@ class Category(db.Model):
         return query
     
     @classmethod
-    def create_category(cls, name, slug, description='', media_id=None, commit=True, **kwargs):
+    def create_category(cls, name, slug, description="", media_id=None, commit=True, **kwargs):
         category = cls(name=name, description=description, slug=slug, media_id=media_id, **kwargs)
         
         # Set additional attributes from kwargs
@@ -84,12 +84,12 @@ class Category(db.Model):
     
     def to_dict(self, include_children=False) -> dict[str, any]:
         data = {
-            'id': self.id,
-            'name': self.name,
-            'description': self.description,
-            'slug': self.slug,
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "slug": self.slug,
             }
         if include_children:
-            data['children'] = [child.to_dict() for child in self.children]
+            data["children"] = [child.to_dict() for child in self.children]
         return data
 
