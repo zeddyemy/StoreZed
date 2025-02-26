@@ -1,6 +1,6 @@
 from flask_jwt_extended import jwt_required
 
-from . import api_bp
+from .. import api_bp
 from ..controllers.payments import PaymentController
 
 

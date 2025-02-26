@@ -11,7 +11,7 @@ from flask_login import login_required
 
 from ....utils.decorators.auth import login_required
 
-from . import web_front_bp
+from .. import web_front_bp
 
 @web_front_bp.route("/orders", methods=['GET'])
 @login_required

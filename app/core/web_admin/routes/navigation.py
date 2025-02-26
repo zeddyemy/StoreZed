@@ -2,7 +2,7 @@ from flask import render_template, request, flash, redirect, url_for
 from flask_login import login_required
 from sqlalchemy.exc import IntegrityError, DataError, DatabaseError, OperationalError
 
-from . import web_admin_bp
+from .. import web_admin_bp
 from ....extensions import db
 from ....models.nav import NavigationBarItem
 from ....utils.helpers.loggers import log_exception, console_log

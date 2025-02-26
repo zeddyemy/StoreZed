@@ -20,7 +20,7 @@ from ....utils.forms.web_front.payments import TopUpForm
 from ....utils.payments.payment_manager import PaymentManager
 from ....models import Payment
 
-from . import web_front_bp
+from .. import web_front_bp
 
 @web_front_bp.route("/payments/verify/", methods=['GET', 'POST'])
 @web_front_bp.route("/payments/verify", methods=['GET', 'POST'])

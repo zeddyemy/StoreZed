@@ -12,7 +12,7 @@ class SubscriptionPlan(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    price = db.Column(db.Numeric(10, 2), nullable=False)
+    price = db.Column(db.Numeric(14, 2), nullable=False)
     duration_days = db.Column(db.Integer(), nullable=False)
     features = db.Column(db.JSON, default=list)
     is_active = db.Column(db.Boolean(), default=True)

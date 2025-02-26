@@ -4,7 +4,7 @@ from flask import render_template, request, flash, redirect, abort, url_for, mak
 from flask_login import login_required, current_user
 from sqlalchemy.exc import ( DataError, DatabaseError, OperationalError )
 
-from . import web_admin_bp
+from .. import web_admin_bp
 from ....extensions import db
 from ....enums.payments import PaymentMethods
 from ....enums.settings import GeneralSettingsKeys, PaymentMethodSettingKeys

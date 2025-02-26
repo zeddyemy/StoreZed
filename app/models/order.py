@@ -1,11 +1,13 @@
 from decimal import Decimal
 from typing import Optional
+from sqlalchemy import or_
 from sqlalchemy.orm import Query
 from sqlalchemy import event, Index, CheckConstraint
 
 from ..extensions import db
 from ..utils.date_time import DateTimeUtils
 from ..enums import OrderStatus, PaymentStatus
+from .user import AppUser
 
 class CustomerOrder(db.Model):
     """
@@ -24,7 +26,7 @@ class CustomerOrder(db.Model):
 
     id = db.Column(db.Integer(), primary_key=True)
     order_number = db.Column(db.String(50), unique=True, nullable=False)
-    total_amount = db.Column(db.Numeric(10, 2), nullable=False, doc="Total order amount including taxes and shipping")
+    total_amount = db.Column(db.Numeric(14, 2), nullable=False, doc="Total order amount including taxes and shipping")
     status = db.Column(db.String(20), nullable=False, default=str(OrderStatus.PENDING), index=True)
     
     shipping_address = db.Column(db.JSON, nullable=True, doc="Structured shipping address information")
@@ -33,6 +35,8 @@ class CustomerOrder(db.Model):
     
     created_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow, index=True)
     updated_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow, onupdate=DateTimeUtils.aware_utcnow)
+    is_deleted = db.Column(db.Boolean(), default=False, nullable=True)
+    
 
     # Relationships
     user_id = db.Column(db.Integer(), db.ForeignKey("app_user.id"), nullable=False, index=True)
@@ -51,6 +55,12 @@ class CustomerOrder(db.Model):
         CheckConstraint('total_amount >= 0', name='check_total_amount_positive'),
     )
 
+    def __init__(self, *args, **kwargs) -> None:
+        from ..utils.helpers.customer_orders import generate_customer_order_number
+        
+        super().__init__(*args, **kwargs)
+        self.order_number = generate_customer_order_number()
+    
     def __repr__(self):
         return f"<CustomerOrder {self.order_number} ({self.status})>"
     
@@ -69,6 +79,27 @@ class CustomerOrder(db.Model):
         )
         db.session.commit()
 
+    @staticmethod
+    def add_search_filters(query: Query, search_term: str) -> Query:
+        """
+        Adds search filters to a SQLAlchemy query.
+        """
+        if search_term:
+            search_term = f"%{search_term}%"
+            
+            # Join the Profile table using outerjoin to include users without a profile
+            query = query.outerjoin(CustomerOrder.app_user)
+            
+            query = query.filter(
+                    or_(
+                        CustomerOrder.order_number.ilike(search_term),
+                        CustomerOrder.shipping_address.ilike(search_term),
+                        AppUser.email.ilike(search_term),
+                        AppUser.username.ilike(search_term),
+                    )
+                )
+        return query
+    
     def update(self, commit=True, **kwargs):
         """Update customer_order attributes."""
         for key, value in kwargs.items():
@@ -140,7 +171,7 @@ class OrderItem(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     
     quantity = db.Column(db.Integer(), nullable=False, default=1, doc="Quantity ordered (must be positive)")
-    unit_price = db.Column(db.Numeric(10, 2), nullable=False, doc="Price per unit at time of purchase")
+    unit_price = db.Column(db.Numeric(14, 2), nullable=False, doc="Price per unit at time of purchase")
     meta_info = db.Column(db.JSON, default=dict, doc="Item-specific metadata (options, discounts)")
     
     created_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow)

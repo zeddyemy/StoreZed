@@ -14,7 +14,7 @@ from ....utils.decorators.auth import session_roles_required
 from ....utils.helpers.stats import get_stats_for_admin
 from ....utils.helpers.loggers import log_exception, console_log
 
-from . import web_admin_bp
+from .. import web_admin_bp
 
 @web_admin_bp.route("/dashboard", methods=['GET'], strict_slashes=False)
 @session_roles_required("Super Admin", "Admin")

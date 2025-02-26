@@ -3,7 +3,7 @@ from slugify import slugify
 from flask import render_template, request, flash, redirect, abort, url_for, make_response
 from flask_login import login_required, current_user
 
-from . import web_admin_bp
+from .. import web_admin_bp
 from ....extensions import db
 from ....models import Tag
 from ....utils.forms.web_admin.tags import TagForm

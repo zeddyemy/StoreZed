@@ -13,7 +13,7 @@ from flask_login import current_user
 from sqlalchemy.exc import ( InvalidRequestError, IntegrityError, DataError, DatabaseError )
 from werkzeug.security import generate_password_hash
 
-from . import web_admin_bp
+from .. import web_admin_bp
 from ....extensions import db
 from ....utils.helpers.basics import redirect_url
 from ....utils.helpers.loggers import console_log, log_exception

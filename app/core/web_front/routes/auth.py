@@ -22,7 +22,7 @@ from ....enums.auth import RoleNames
 from ....models import AppUser, Profile, Address, Wallet, Role, UserRole
 from ....utils.forms.auth import SignUpForm, LoginForm
 
-from . import web_front_bp
+from .. import web_front_bp
 
 @web_front_bp.route("/signup", methods=['GET', 'POST'])
 @web_front_bp.route("/register", methods=['GET', 'POST'])

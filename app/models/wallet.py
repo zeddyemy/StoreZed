@@ -14,7 +14,7 @@ from ..utils.date_time import DateTimeUtils
 class Wallet(db.Model):
     
     id = db.Column(db.Integer(), primary_key=True)
-    _balance = db.Column(db.Numeric(10, 2), default=0.00, nullable=True)
+    _balance = db.Column(db.Numeric(14, 2), default=0.00, nullable=True)
     currency_name = db.Column(db.String(), default='Naira', nullable=True)
     currency_code = db.Column(db.String(), default='NGN', nullable=True)
     currency_symbol = db.Column(db.String(), default=str('₦'), nullable=True)

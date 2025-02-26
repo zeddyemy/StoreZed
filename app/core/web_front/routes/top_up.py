@@ -19,7 +19,7 @@ from ....utils.forms import handle_form_errors
 from ....utils.forms.web_front.payments import TopUpForm
 from ....utils.payments.payment_manager import PaymentManager
 
-from . import web_front_bp
+from .. import web_front_bp
 
 @web_front_bp.route("/top-up", methods=['GET', 'POST'])
 @login_required

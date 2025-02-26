@@ -16,7 +16,7 @@ class Payment(db.Model):
 
     id = db.Column(db.Integer(), primary_key=True)
     key = db.Column(db.String(80), unique=True, nullable=False) # Unique identifier for the payments
-    amount = db.Column(db.Numeric(10, 2), nullable=False)
+    amount = db.Column(db.Numeric(14, 2), nullable=False)
     narration = db.Column(db.String(255), nullable=True)
     payment_method = db.Column(db.String(), nullable=False)  # 'wallet' or 'payment gateway(flutterwave)'
     status = db.Column(db.String(20), nullable=False, default="pending")  # Status of the payment request
@@ -96,7 +96,7 @@ class Transaction(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     key = db.Column(db.String(80), unique=True, nullable=False) # Unique identifier for the financial transaction
-    amount = db.Column(db.Numeric(10, 2), nullable=False)
+    amount = db.Column(db.Numeric(14, 2), nullable=False)
     transaction_type = db.Column(db.String(), nullable=False) # 'credit', 'debit', 'payment' or 'withdraw'
     narration = db.Column(db.String(150), nullable=True)
     status = db.Column(db.String(80), nullable=False) # Status of the financial transaction

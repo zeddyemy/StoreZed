@@ -14,7 +14,7 @@ from sqlalchemy.exc import ( IntegrityError, DataError, DatabaseError, InvalidRe
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 
-from . import web_admin_bp
+from .. import web_admin_bp
 from ....extensions import db
 from ....enums.auth import RoleNames
 from ....models import AppUser, Profile, Address, Role, UserRole

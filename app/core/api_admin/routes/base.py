@@ -2,8 +2,10 @@
 Author: Emmanuel Olowu
 Link: https://github.com/zeddyemy
 Copyright: © 2024 Emmanuel Olowu <zeddyemy@gmail.com>
-License: MIT, see LICENSE for more details.
-Package: BitnShop
 """
 
-from . import base
+from .. import admin_api_bp
+
+@admin_api_bp.route('/')
+def index():
+    return 'Admin API routes'

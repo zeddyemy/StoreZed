@@ -5,5 +5,8 @@ Copyright: © 2024 Emmanuel Olowu <zeddyemy@gmail.com>
 License: MIT, see LICENSE for more details.
 Package: BitnShop
 """
+from flask import Blueprint
 
-from . import home, auth, users, products, categories, tags, settings, navigation, orders
+api_bp: Blueprint = Blueprint('api', __name__, url_prefix='/api')
+
+from .routes import base, auth, categories, payments, products, settings, tags

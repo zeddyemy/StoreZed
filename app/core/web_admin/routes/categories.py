@@ -4,7 +4,7 @@ from slugify import slugify
 from flask import render_template, request, flash, redirect, abort, url_for, jsonify, make_response
 from flask_login import login_required, current_user
 
-from . import web_admin_bp
+from .. import web_admin_bp
 from ....extensions import db
 from ....models import Category, Product, product_category
 from ....utils.forms.web_admin.categories import CategoryForm
