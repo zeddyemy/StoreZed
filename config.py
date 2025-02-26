@@ -58,7 +58,7 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
 
 class TestingConfig(Config):
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:@localhost:3301/bitnshop"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:@localhost:3301/bitnshop?charset=utf8mb4"
 
 
 # Map config based on environment
