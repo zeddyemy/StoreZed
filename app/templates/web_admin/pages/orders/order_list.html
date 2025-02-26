@@ -159,7 +159,7 @@
         {% endwith %}
     {% else %}
         
-        {% with data_in_db='Orders', data_in_db_url='#' %}
+        {% with data_in_db='Orders', data_in_db_url='' %}
             {% include 'web_admin/components/no_data.html' %}
         {% endwith %}
     {% endif %}

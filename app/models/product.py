@@ -27,14 +27,14 @@ class Product(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     uuid = db.Column(db.String(36), unique=True, nullable=False, default=uuid.uuid4)
-    name = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(80), nullable=False)
     description  = db.Column(db.String(300), nullable=True)
     selling_price = db.Column(db.Numeric(14, 2), default=0.00, nullable=True)
     actual_price = db.Column(db.Numeric(14, 2), default=0.00, nullable=True)
     sizes = db.Column(db.String(300), nullable=True)
-    colors = db.Column(db.String(), nullable=True)
-    slug = db.Column(db.String(), nullable=False, unique=True)
-    pub_status = db.Column(db.String(), nullable=False, default="draft")
+    colors = db.Column(db.String(80), nullable=True)
+    slug = db.Column(db.String(80), nullable=False, unique=True)
+    pub_status = db.Column(db.String(50), nullable=False, default="draft")
     date_created = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow)
     created_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow)
     updated_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow, onupdate=DateTimeUtils.aware_utcnow)
@@ -148,7 +148,7 @@ class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
     description = db.Column(db.String(255), nullable=True)
-    slug = db.Column(db.String(), nullable=False, unique=True)
+    slug = db.Column(db.String(80), nullable=False, unique=True)
     
     @staticmethod
     def add_search_filters(query: Query, search_term: str) -> Query:
@@ -208,7 +208,7 @@ class productVariations(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
     name = db.Column(db.String(100), nullable=False)
     selling_price = db.Column(db.Integer, nullable=True)
-    img_url = db.Column(db.String(), nullable=True)
+    img_url = db.Column(db.String(250), nullable=True)
     
     
     def update(self, **kwargs):

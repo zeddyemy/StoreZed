@@ -15,9 +15,9 @@ class Wallet(db.Model):
     
     id = db.Column(db.Integer(), primary_key=True)
     _balance = db.Column(db.Numeric(14, 2), default=0.00, nullable=True)
-    currency_name = db.Column(db.String(), default='Naira', nullable=True)
-    currency_code = db.Column(db.String(), default='NGN', nullable=True)
-    currency_symbol = db.Column(db.String(), default=str('₦'), nullable=True)
+    currency_name = db.Column(db.String(50), default='Naira', nullable=True)
+    currency_code = db.Column(db.String(10), default='NGN', nullable=True)
+    currency_symbol = db.Column(db.String(10), default=str('₦'), nullable=True)
     date_created = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('app_user.id', ondelete='CASCADE'), nullable=False,)
     

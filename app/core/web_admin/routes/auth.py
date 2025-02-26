@@ -119,11 +119,11 @@ def login():
                 
                 if not user:
                     flash("Email/Username is incorrect or doesn't exist", 'error')
-                    return render_template('web_admin/auth/login.html', form=form, page='auth')
+                    return render_template('web_admin/pages/auth/login.html', form=form, page='auth')
                 
                 if not user.verify_password(pwd):
                     flash("Password is incorrect", 'error')
-                    return render_template('web_admin/auth/login.html', form=form, page='auth')
+                    return render_template('web_admin/pages/auth/login.html', form=form, page='auth')
                 
                 login_user(user)
                 flash("Welcome back " + user.username, 'success')

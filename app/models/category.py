@@ -20,7 +20,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     description  = db.Column(db.String(200), nullable=True)
-    slug = db.Column(db.String(), nullable=False, unique=True)
+    slug = db.Column(db.String(80), nullable=False, unique=True)
     date_created = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow)
     
     media_id = db.Column(db.Integer, db.ForeignKey("media.id"), nullable=True)

@@ -32,6 +32,7 @@ packaging==24.0
 phonenumbers==8.13.45
 psycopg2==2.9.9
 pycountry==24.6.1
+pymysql==1.1.1
 pytest==8.3.4
 python-dotenv==1.0.1
 python-slugify==8.0.3
