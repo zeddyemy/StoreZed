@@ -21,13 +21,13 @@
             {% endif %}
         {% endfor %}
     </div>
-
-    {% with recent_products=stats.recent_products %}
-        {% include 'web_admin/pages/dashboard/components/recent_products.html' %}
-    {% endwith %}
-
+    
     {% with recent_orders=stats.recent_orders %}
         {% include 'web_admin/pages/dashboard/components/recent_orders.html' %}
+    {% endwith %}
+    
+    {% with recent_products=stats.recent_products %}
+        {% include 'web_admin/pages/dashboard/components/recent_products.html' %}
     {% endwith %}
 </div>
 {% endblock %}
