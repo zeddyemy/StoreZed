@@ -1,0 +1,16 @@
+{% extends 'web_admin/base/errors_base.html' %}
+{% block title %} 401 - Unauthorized {{ super() }} {% endblock %}
+
+{% block CSSandJS_Links %} {% endblock %}
+
+
+{% block content %}
+
+    {% set error_title = '401 - Unauthorized' %}
+    {% set error_tagline = 'Seems you not authorized to access to this page.' %}
+    {% set error_msg = 'Please contact the admin if you feel this is a mistake.' %}
+
+    {% with error_title=error_title, error_tagline=error_tagline, error_msg=error_msg %}
+        {% include 'web_admin/errors/comp/error_card.html' %}
+    {% endwith %}
+{% endblock %}

@@ -11,3 +11,4 @@ from flask import Blueprint, render_template
 web_admin_bp: Blueprint = Blueprint('web_admin', __name__, url_prefix='/shop-admin')
 
 from .routes import home, auth, users, products, categories, tags, settings, navigation, orders
+from .error_handlers import status_codes

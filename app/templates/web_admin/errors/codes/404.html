@@ -1,0 +1,13 @@
+{% extends 'web_admin/base/errors_base.html' %}
+{% block title %}404 - Page not found {{ super() }}{% endblock %}
+
+{% block CSSandJS_Links %} {% endblock %}
+
+
+{% block content %}
+    {% set error_msg = 'It seems we can’t find what you’re looking for. Perhaps searching can help.' %}
+
+    {% with error_title='404 - Not Found', error_msg=error_msg %}
+        {% include 'web_admin/errors/comp/error_card.html' %}
+    {% endwith %}
+{% endblock %}

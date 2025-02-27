@@ -1,0 +1,14 @@
+<section class="error-container flex items-center justify-center w-full h-full">
+    <section class="error-card max-w-full md:max-w-md lg:max-w-lg p-6 border border-gray-200 rounded-lg shadow-lg bg-white font-normal text-gray-700">
+
+        <h1 class="text-center text-3xl font-bold mb-4"> {{ error_title }} </h1>
+
+        {% if error_tagline %}
+            <h2 class="text-center text-xl font-medium mt-[-10px] mb-6"> {{ error_tagline }} </h2>
+        {% endif %}
+        
+        <p class="mb-4"> {{ error_msg }} </p>
+
+        {% include 'web_admin/errors/comp/error-btns.html' %}
+    </section>
+</section>

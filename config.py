@@ -5,7 +5,7 @@ class Config:
     ENV = os.getenv("ENV") or "development"
     SECRET_KEY = os.getenv("SECRET_KEY") or os.environ.get("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SERVER_NAME = "c612-105-115-2-133.ngrok-free.app" or os.getenv("FLASK_SERVER_NAME")
+    SERVER_NAME = "9395-105-115-3-2.ngrok-free.app" or os.getenv("FLASK_SERVER_NAME")
     PREFERRED_URL_SCHEME = os.getenv("FLASK_URL_SCHEME")
     
     DEBUG = (ENV == "development")  # Enable debug mode only in development
@@ -31,8 +31,8 @@ class Config:
     MAIL_ALIAS = (f"{MAIL_DEFAULT_SENDER}", f"{MAIL_USERNAME}")
     
     # Domains
-    API_DOMAIN_NAME = os.environ.get("API_DOMAIN_NAME") or "https://c612-105-115-2-133.ngrok-free.app"
-    APP_DOMAIN_NAME = os.environ.get("APP_DOMAIN_NAME") or "https://c612-105-115-2-133.ngrok-free.app"
+    API_DOMAIN_NAME = os.environ.get("API_DOMAIN_NAME") or "https://9395-105-115-3-2.ngrok-free.app"
+    APP_DOMAIN_NAME = os.environ.get("APP_DOMAIN_NAME") or "https://9395-105-115-3-2.ngrok-free.app"
     
     # Cloudinary configurations
     CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME') or "dcozguaw3"
@@ -48,7 +48,7 @@ class DevelopmentConfig(Config):
     FLASK_DEBUG = True
     DEBUG_TOOLBAR = True  # Enable debug toolbar
     EXPOSE_DEBUG_SERVER = False  # Do not expose debugger publicly
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or os.getenv("DATABASE_URL") or "sqlite:///db.sqlite3"
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or os.getenv("DATABASE_URL")
 
 class ProductionConfig(Config):
     DEBUG = False

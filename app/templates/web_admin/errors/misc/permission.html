@@ -1,0 +1,18 @@
+{% extends 'web_admin/base/errors_base.html' %}
+{% block title %}Permission Error - {{ super() }}{% endblock %}
+
+{% block content %}
+    
+    {% set error_title = 'Permission Error' %}
+    {% set error_tagline = 'You do not have access to this page.' %}
+
+    {% if msg %}
+        {% set error_msg = msg %}
+    {% else %}
+        {% set error_msg = 'Please contact the admin if you feel this is a mistake.' %}
+    {% endif %}
+
+    {% with error_title=error_title, error_tagline=error_tagline, error_msg=error_msg %}
+        {% include 'web_admin/errors/comp/error_card.html' %}
+    {% endwith %}
+{% endblock %}

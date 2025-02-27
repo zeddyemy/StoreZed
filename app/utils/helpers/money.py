@@ -66,7 +66,7 @@ def format_monetary_value( amount: Decimal ) -> str:
     Returns:
         A formatted string representation of the currency amount.
     """
-    amount = Decimal(amount)
+    amount = Decimal(amount) if amount else Decimal(0.00)
     console_log("initial amount", amount)
     
     

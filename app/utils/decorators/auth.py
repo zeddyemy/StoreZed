@@ -99,7 +99,7 @@ def session_roles_required(*required_roles):
                     current_user = get_current_user()
                     # Check if user has the required roles
                     if not any(user_role.role.name.value in required_roles for user_role in current_user.roles):
-                        return render_template('web_admin/errors/permission.html', msg="Access denied: You do not have the required roles to access this resource")
+                        return render_template('web_admin/errors/misc/permission.html', msg="Access denied: You do not have the required roles to access this resource")
                     
                     return fn(*args, **kwargs)
                 
