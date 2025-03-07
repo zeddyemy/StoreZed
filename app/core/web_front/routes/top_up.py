@@ -32,8 +32,8 @@ def top_up():
     
     active_payment_gateway = get_active_payment_gateway()
     if not active_payment_gateway:
-        flash("Payment gateway is not set up. Please configure it in the admin panel.", "danger")
-        return redirect(url_for("web_front.top_up"))
+        flash("Payment gateway is not set up. Please contact admin.", "danger")
+        return redirect(url_for("web_front.index"))
     
     form = TopUpForm() # A form to allow users to input the top-up amount
     
