@@ -1,5 +1,22 @@
 const main = document.querySelector('#main');
 
+const toggleLoadingBtn = (button) => {
+	const btnTxt = button.querySelector(".btn-txt");
+	const loadIco = button.querySelector(".load-ico");
+	const theIco = loadIco.querySelector(".bx");
+
+	button.disabled = !button.disabled; // disable button to prevent multiple clicks
+	btnTxt.classList.toggle("hidden");
+	loadIco.classList.toggle("hidden");
+	theIco.classList.toggle("bx-spin");
+};
+
+const toggleDisabled = (node) => {
+	node.hasAttribute("disabled")
+		? node.removeAttribute("disabled")
+		: node.setAttribute("disabled", true);
+};
+
 main.addEventListener('click', e => {
     const collapsibleHead = e.target.closest('.collapsible-header');
 
@@ -30,3 +47,4 @@ main.addEventListener('click', e => {
         }
     }
 });
+

@@ -88,6 +88,7 @@ class Category(db.Model):
             "name": self.name,
             "description": self.description,
             "slug": self.slug,
+            "parent_id": self.parent_id
             }
         if include_children:
             data["children"] = [child.to_dict() for child in self.children]

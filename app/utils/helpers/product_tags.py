@@ -41,6 +41,16 @@ def get_tag_choices() -> list[tuple[str, str]]:
     
     return choices
 
+def get_tag_suggestions(term: str) -> list[str]:
+    term = str(term).strip()
+    
+    suggestions: list[str] = []
+    
+    tag_suggestions: list[Tag] = Tag.query.filter(Tag.name.ilike(f'%{term}%')).all()
+    suggestions.extend([tag.name for tag in tag_suggestions])
+    
+    
+    return suggestions
 
 def fetch_all_tags(
         page_num: Optional[int] = None,

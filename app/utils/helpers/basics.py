@@ -1,5 +1,5 @@
 import re, random, string, logging, time
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, Optional
 from flask import current_app, abort, request, url_for
 from slugify import slugify
 
@@ -68,6 +68,7 @@ def int_or_none(s):
     except:
         return None
 
+
 def normalize_keys(data: Union[Dict[str, Any], List[Any], Any]) -> Union[Dict[str, Any], List[Any], Any]:
     """
     Recursively normalizes keys in a dictionary or list to snake_case.
@@ -96,6 +97,7 @@ def normalize_keys(data: Union[Dict[str, Any], List[Any], Any]) -> Union[Dict[st
         return [normalize_keys(item) for item in data]
     else:
         return data
+
 
 def generate_random_string(length: int = 8, prefix: str = '') -> str:
     """
@@ -203,3 +205,9 @@ def get_object_by_slug(model: object, slug: str):
 def redirect_url(default='admin.index'):
     return request.args.get('next') or request.referrer or \
         url_for(default)
+
+
+def parse_bool(value: Optional[str]) -> bool:
+    """Parse a string value to boolean."""
+    return str(value).lower() in ("true", "1", "yes") if value else False
+

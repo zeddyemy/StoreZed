@@ -10,4 +10,4 @@ from flask import Blueprint
 
 admin_api_bp: Blueprint = Blueprint('admin_api', __name__, url_prefix='/api/admin')
 
-from .routes import base
+from .routes import base, product_tags, categories

@@ -19,15 +19,17 @@
         </div>
 
         <div class="form-group">
-            <label for="new_category_input" class="cat-input-label block mb-2 text-sm font-medium cursor-pointer">Add new category</label>
+            <label for="new_category_input" class="cat-input-label block mb-2 text-sm font-medium cursor-pointer" data-category-toggle>
+                Add new category
+            </label>
 
-            <div class="cat-input-block">
+            <div class="cat-input-block hidden" data-category-input-block>
                 <input type="text" class="form-control mb-4 text-sm rounded-lg shadow-sm-light border border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none
-            bg-gray-50 text-gray-900" id="new-category-input" name="new_category_input">
+            bg-gray-50 text-gray-900" id="new-category-input" name="new_category_input" data-category-input>
 
                 {{ parent_cat_field | safe }}
 
-                <button class="btn add-new-cat loadable mt-4 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-theme-clr rounded-lg hover:bg-theme-hvr-clr focus:ring-2 focus:outline-none focus:ring-outline-clr">
+                <button class="btn add-new-cat loadable mt-4 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-theme-clr rounded-lg hover:bg-theme-hvr-clr focus:ring-2 focus:outline-none focus:ring-outline-clr" data-category-submit>
                     <span class="btn-txt">Add</span>
                     <span class="load-ico hidden">
                         <i class="bx bx-loader-alt"></i>

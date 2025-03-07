@@ -6,4 +6,4 @@ License: MIT, see LICENSE for more details.
 Package: BitnShop
 """
 
-from . import base
+from . import base, product_tags, categories

@@ -27,12 +27,15 @@
     // Function to fetch tag suggestions from the server based on user input
     const fetchTagSuggestions = async (input) => {
         try {
-            const response = await fetch(`/api/v1/tags/suggestions?input=${input}`);
+            const response = await fetch(
+				`/api/admin/tags/suggestions?term=${input}`
+			);
             if (!response.ok) {
                 throw new Error('Failed to fetch tag suggestions');
             }
             const data = await response.json();
-            return data.suggestions;
+            
+            return data.data.suggestions;
         } catch (error) {
             console.error(error);
             return [];

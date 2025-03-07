@@ -58,13 +58,14 @@ def generate_category_field(format='checkbox', sel_cats=None, indent_level=0):
     def generate_child(category_children: list[Category], the_indent_level: int = 0):
         html = ''
         if format == 'checkbox':
-            html = '<ul class="isChild">\n'
+            html = '<ul class="is-child">\n'
             for category in category_children:
                 is_checked = category in sel_cats
                 category_id = f"categories-{category.id}"
-                html += f'    <li>\n' \
+                data_parent = f"data-parent={category.parent_id if category.parent_id else ''}"
+                html += f'    <li data-category={category.id}>\n' \
                             f'        <input id="{category_id}" name="categories" ' \
-                            f'type="checkbox" value="{category.id}" {"checked" if is_checked else ""}> ' \
+                            f'type="checkbox" value="{category.id}" {"checked" if is_checked else ""} {data_parent}> ' \
                             f'<label for="{category_id}">{category.name}</label>\n'
                 child_html = generate_child(category.children)
                 if child_html:
@@ -85,13 +86,14 @@ def generate_category_field(format='checkbox', sel_cats=None, indent_level=0):
     # Generate the HTML field
     html = ''
     if format == 'checkbox':
-        html = '<ul class="form-control form-checkbox list-view h-fit min-h-[40px] max-h-[300px] border border-outline-clr rounded-lg shadow-sm-light w-full p-2.5 overflow-y-scroll" id="categories">\n'
+        html = '<ul class="form-control form-checkbox list-view h-fit min-h-[40px] max-h-[300px] border border-outline-clr rounded-lg shadow-sm-light w-full p-2.5 overflow-y-scroll" id="categories" data-category-checkboxes>\n'
         for category in categories:
             is_checked = category in sel_cats
             category_id = f"categories-{category.id}"
-            html += f'    <li>\n' \
+            data_parent = f"data-parent={category.parent_id if category.parent_id else ''}"
+            html += f'    <li data-category={category.id}>\n' \
                     f'        <input id="{category_id}" name="categories" ' \
-                    f'type="checkbox" value="{category.id}" {"checked" if is_checked else ""}> ' \
+                    f'type="checkbox" value="{category.id}" {"checked" if is_checked else ""} {data_parent}> ' \
                     f'<label for="{category_id}">{category.name}</label>\n'
             child_html = generate_child(category.children)
             if child_html:
@@ -100,7 +102,7 @@ def generate_category_field(format='checkbox', sel_cats=None, indent_level=0):
         html += '</ul>'
 
     elif format == 'select':
-        html = '<select class="form-control text-sm rounded-lg shadow-sm-light border border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900" id="parent-cat" name="parent_cat">\n'
+        html = '<select class="form-control text-sm rounded-lg shadow-sm-light border border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900" id="parent-cat" name="parent_cat" data-parent-select>\n'
         html += '    <option value="">— Parent category —</option>\n'
 
         for category in categories:

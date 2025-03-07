@@ -4,6 +4,22 @@ stylesheets for the add new product page
 
 
 /* add tags */
+.product-tag-input {
+    position: relative;
+}
+
+#tag-suggestions {
+    list-style: none;
+}
+.tag-suggestion {
+    padding: 3px 10px;
+    cursor: pointer;
+}
+.tag-suggestion.selected {
+    background: var(--theme-clr);
+    color: #fff;
+}
+
 #tag-list {
     display: flex;
 }
@@ -50,4 +66,8 @@ stylesheets for the add new product page
     height: 22px;
     color: #fff;
     border-radius: 5px;
+}
+
+.is-child {
+    margin: 0 0 0 20px;
 }

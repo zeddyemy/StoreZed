@@ -8,6 +8,7 @@ Package: BitnShop
 
 import os, sys
 from threading import Thread
+from typing import Optional
 from sqlalchemy import desc
 from sqlalchemy.orm import Query
 from flask_sqlalchemy.pagination import Pagination # Import Pagination if needed
@@ -47,12 +48,13 @@ def get_category_choices() -> list[tuple[str, str]]:
     return choices
 
 def fetch_all_categories(
-        cat_id: int | None = None,
-        page_num: int | None = None,
+        cat_id: Optional[int] = None,
+        page_num: Optional[int] = None,
+        per_page: Optional[int] = None,
         paginate: bool = False,
         parent_only: bool = True,
-        search_term: str | None = "",
-    ) -> list[Category]:
+        search_term: Optional[str] = "",
+    ) -> list[Category] | Pagination:
     ''' Get categories from the database with optional filtering and pagination.
     
     Returns either a pagination object or list of Category instances.
@@ -73,6 +75,9 @@ def fetch_all_categories(
     if page_num is None:
         page_num = request.args.get("page", 1, type=int)
     
+    if per_page is None:
+        per_page = request.args.get("per_page", 10, type=int)
+    
     if search_term is None:
         search_term = request.args.get("search", "").strip()
 
@@ -92,7 +97,7 @@ def fetch_all_categories(
     
     # Execute query with/without pagination
     if paginate:
-        pagination = query.paginate(page=page_num, per_page=10, error_out=False)
+        pagination = query.paginate(page=page_num, per_page=per_page, error_out=False)
         return pagination
     
     return query.all()
@@ -116,16 +121,19 @@ def fetch_category(identifier: int | str) -> Category:
     return category
 
 
-def save_category(form_data, slug=None) -> Category:
+def save_category(data, slug=None) -> Category:
     try:
+        console_log("INFO", "saving category...")
         category = None
         if slug:
             category = fetch_category(slug)
         
         # get form data
-        name = form_data.get('name', '')
-        description = form_data.get('description', '')
-        parent_cat = int_or_none(form_data.get('parent_cat', None))
+        name = data.get('name', '')
+        description = data.get('description', '')
+        parent_cat = int_or_none(data.get('parent_cat', None))
+        
+        console_log("parent_cat", parent_cat)
         
         cat_img = request.files.get('cat_img', '')
         
@@ -180,6 +188,8 @@ def save_category(form_data, slug=None) -> Category:
         db.session.rollback()
         log_exception('An error occurred while creating category', e)
         raise e
+    finally:
+        console_log("INFO", "category saved")
 
 
 def async_save_category_media(app: Flask, media_file_paths, category: Category = None) -> int:
