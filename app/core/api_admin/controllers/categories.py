@@ -14,6 +14,7 @@ from ....utils.forms.web_admin.products import generate_category_field
 class AdminCategoryController:
     @staticmethod
     def fetch_all_categories():
+        """Fetch all categories with optional pagination."""
         try:
             page_num = request.args.get("page", 1, type=int)
             per_page = request.args.get("per_page", 10, type=int)
@@ -44,6 +45,7 @@ class AdminCategoryController:
     
     @staticmethod
     def fetch_category(identifier):
+        """Fetch a single category by ID or slug."""
         try:
             category: Category = fetch_category(identifier)
             
@@ -64,12 +66,13 @@ class AdminCategoryController:
     
     @staticmethod
     def add_new_category():
+        """Create a new category."""
         try:
             form_data = request.form
             new_category = save_category(form_data)
             
             if not new_category:
-                return error_response("Category couldn't get added", 500)
+                return error_response("Failed to create category", 500)
             
             # Parse 'add_select' query parameter
             add_select = request.args.get("add_select", "").lower() in {'true', '1'}
@@ -79,9 +82,11 @@ class AdminCategoryController:
             }
             
             if add_select:
-                extra_data['select_field'] = generate_category_field(format='select')
+                # Generate updated category field HTML
+                category_field = generate_category_field(format='select')
+                extra_data['select_field'] = category_field
             
-            api_response = success_response("new category successfully", 200, extra_data)
+            api_response = success_response("Category created successfully", 200, extra_data)
         except (IntegrityError) as e:
             log_exception('Database integrity error adding category', e)
             api_response = error_response("Category already exists", 409)
@@ -99,9 +104,20 @@ class AdminCategoryController:
     def edit_category(identifier):
         try:
             category: Category = fetch_category(identifier)
-            
             if not category:
                 return error_response("Category not found", 404)
+            
+            form_data = request.form
+            updated_category = save_category(form_data, category.slug)
+            
+            if not updated_category:
+                return error_response("Failed to update category", status_code=400)
+            
+            extra_data = {
+                "category": updated_category.to_dict(),
+            }
+            
+            api_response =  success_response("Category updated successfully", 200, extra_data)
         except (DataError, DatabaseError) as e:
             log_exception('Database error occurred editing category', e)
             api_response = error_response('Database Error.', 500)
@@ -116,13 +132,18 @@ class AdminCategoryController:
     def delete_category(identifier):
         try:
             category: Category = fetch_category(identifier)
-            
             if not category:
                 return error_response("Category not found", 404)
+            
+            category.delete()
+            
+            api_response = success_response("Category deleted successfully", 200)
         except (DataError, DatabaseError) as e:
+            db.session.rollback()
             log_exception('Database error occurred deleting category', e)
             api_response = error_response('Database Error.', 500)
         except Exception as e:
+            db.session.rollback()
             log_exception("An exception occurred deleting category:", e)
             api_response = error_response("An unexpected error occurred.", 500)
         

@@ -177,7 +177,7 @@
 			formData.append("parent_cat", parentCategoryId);
 
 			const response = await fetch(
-				"/api/admin/categories/new?add_select=true",
+				"/api/admin/categories?add_select=true",
 				{
 					method: "POST",
 					body: formData,

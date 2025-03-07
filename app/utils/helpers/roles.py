@@ -103,3 +103,23 @@ def create_roles_and_super_admin(clear: bool = False) -> None:
         db.session.commit()
         
         create_super_admin()
+
+
+def normalize_role(role: str) -> str:
+    """
+    Normalize role name by converting to lowercase and removing extra spaces.
+    
+    Args:
+        role (str): Role name to normalize
+        
+    Returns:
+        str: Normalized role name
+        
+    Example:
+        >>> normalize_role("Admin ")
+        "admin"
+        >>> normalize_role("SUPER ADMIN")
+        "super admin"
+    """
+    return role.strip().lower()
+
