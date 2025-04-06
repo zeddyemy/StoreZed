@@ -48,10 +48,12 @@ function initializeAlerts() {
 
                 // Fallback removal in case transition doesn't fire
                 setTimeout(() => {
-                    if (document.body.contains(alert)) {
-                        alert.remove();
-                    }
-                }, 500);
+					if (document.body.contains(alert)) {
+						alert.remove();
+					}
+				}, 500);
+
+                
             }
 		});
 

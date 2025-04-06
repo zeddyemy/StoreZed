@@ -40,7 +40,6 @@ class Product(db.Model):
     updated_at = db.Column(db.DateTime(timezone=True), default=DateTimeUtils.aware_utcnow, onupdate=DateTimeUtils.aware_utcnow)
     
     media_id = db.Column(db.Integer, db.ForeignKey("media.id"), nullable=True)
-    category_id = db.Column(db.Integer, db.ForeignKey("category.id", ondelete="CASCADE"), nullable=True,)
     user_id = db.Column(db.Integer, db.ForeignKey("app_user.id"), nullable=False)
     
     app_user = db.relationship("AppUser", backref=db.backref("products", lazy="dynamic"))
@@ -50,7 +49,7 @@ class Product(db.Model):
     
     
     def __repr__(self):
-        return f"<Product ID: {self.id}, name: {self.name}, category Id: {self.category_id}>"
+        return f"<Product ID: {self.id}, name: {self.name}>"
     
     @staticmethod
     def add_search_filters(query: Query, search_term: str) -> Query:
@@ -137,7 +136,6 @@ class Product(db.Model):
             "colors": self.colors,
             "slug": self.slug,
             "pub_status": self.pub_status,
-            "category_id": self.category_id,
             "created_at": self.created_at.strftime("%b %d, %Y - %I:%M %p"),
             "updated_at": self.updated_at.strftime("%b %d, %Y - %I:%M %p"),
         }

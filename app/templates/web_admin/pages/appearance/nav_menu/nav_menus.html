@@ -1,0 +1,53 @@
+{% extends 'web_admin/base/base.html' %}
+{% block title %}Menus - {{ super() }}{% endblock %}
+
+{% block content %}
+
+<section id="nav-menu-settings" class="nav-menu-settings">
+    <div class="relative overflow-x-auto mx-auto max-w-full pb-6 lg:py-16 lg:pt-1">
+        {% if nav_menus %}
+        <div id="main-header" class="flex items-center justify-between flex-wrap lg:flex-row space-y-4 lg:space-y-0 pb-6">
+            <div class="page-head">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Navigation Menus</h2>
+                <p class="text-md text-gray-600 dark:text-white">
+                    Manage your website navigation menus.
+                </p>
+            </div>
+    
+            <!-- <a href="" class="btn inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-lg bg-theme-clr hover:bg-theme-hvr-clr">Create New <span class="ml-1 hidden md:inline"> Nav Menu </span></a> -->
+        </div>
+
+        <div class="manage-menus">
+            <ul class="nav-menu-list space-y-2">
+            {% for nav_menu in nav_menus %}
+            <li class="p-4 bg-white border border-outline-clr rounded-lg flex justify-between items-center">
+                <div class="menu-info">
+                    <span>{{ nav_menu.name }}</span>
+                    {% if nav_menu.description %}
+                        <span class="block text-sm text-gray-600">
+                            {{ nav_menu.description }}
+                        </span>
+                    {% endif %}
+                </div>
+                <div class="flex space-x-2">
+                {{ render_btn("Manage", "outline", url=url_for('web_admin.manage_nav_menu', identifier=nav_menu.slug)) }}
+                </div>
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+        
+        {% else %}
+        <div class="flex items-center justify-center h-[73svh]">
+            <div class="p-6 max-w-full md:max-w-md lg:max-w-lg bg-white border border-outline-clr rounded-lg shadow-lg text-center">
+                <p class="mb-4 text-gray-700">You don't have any nav menu, create your first Menu.</p>
+                <a href="" class="btn inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-lg bg-theme-clr hover:bg-theme-hvr-clr">
+                Create New Menu
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

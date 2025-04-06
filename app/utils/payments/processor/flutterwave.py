@@ -37,10 +37,12 @@ class FlutterwaveProcessor(PaymentProcessor):
             "Content-Type": "application/json"
         }
         
+        # Convert to Decimal first for validation
+        amount_decimal = Decimal(str(amount)) if isinstance(amount, float) else amount
         
         data = {
             "tx_ref": self.reference,
-            "amount": amount,
+            "amount": str(amount_decimal),
             "currency": currency,
             "redirect_url": redirect_url,
             "customer": {
@@ -51,14 +53,15 @@ class FlutterwaveProcessor(PaymentProcessor):
 
         response = requests.post(url, json=data, headers=headers)
         response_data = response.json()
+        data = response_data.get("data", {})
         
         console_log("flw init response_data", response_data)
         
         payment_response = PaymentProcessorResponse(
             status = "success" if response_data["status"] == "success" else "error",
             message = response_data.get("message", ""),
-            payment_id = response_data.get("data", {}).get("reference"),
-            authorization_url = response_data.get("data", {}).get("link"),
+            payment_id = data.get("reference") if data else "",
+            authorization_url = data.get("link") if data else "",
             reference = self.reference,
         )
         return payment_response

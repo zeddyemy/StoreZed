@@ -110,9 +110,9 @@ def get_cached_categories(parent_only=True) -> list[dict[str, str]]:
 def fetch_category(identifier: int | str) -> Category:
     category = None
     try:
-        # Check if product_id_key is an integer
+        # Check if identifier is an integer
         id = int(identifier)
-        # Fetch the product by id
+        # Fetch the category by id
         category = Category.query.filter_by(id=id).first()
     except ValueError:
         # If not an integer, treat it as a string

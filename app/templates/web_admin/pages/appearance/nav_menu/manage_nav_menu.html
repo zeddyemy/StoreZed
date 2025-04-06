@@ -1,0 +1,321 @@
+{% extends 'web_admin/base/base.html' %}
+{% block title %} 
+    Customize {% if nav_menu %} {{nav_menu.name}} {% endif %} - {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+{% macro render_menu_accordion_item(accordion_title, accordion_data=None, content_type='list') -%}
+
+{% set sanitized_name = accordion_title|lower|replace(' ', '-') %}
+{% set acc_body_id = 'acc-' ~ sanitized_name ~ '-body' %}
+
+<div class="accordion-item border-b border-outline-clr last:border-0">
+    <button 
+        type="button"
+        class="flex items-center justify-between w-full px-4 py-3 font-bold bg-gray-100 hover:bg-gray-200 focus:outline-none" 
+        data-accordion-target="#{{ acc_body_id }}"
+        aria-expanded="true"
+        aria-controls="{{ acc_body_id }}"
+    >
+        <span> {{ accordion_title|title }} </span>
+        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+        </svg>
+    </button>
+    
+    <div id="{{ acc_body_id }}" class="accordion-content p-4 hidden">
+        {% if content_type == 'list' %}
+            {% if accordion_data %}
+                <div class="space-y-2">
+                    <div class="rounded-lg border border-gray-300 bg-gray-50 dark:bg-gray-800 p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <ul class="space-y-2">
+                            {% for data in accordion_data %}
+                                <li class="flex items-center gap-2">
+                                    <input 
+                                        type="checkbox"
+                                        name="{{ sanitized_name }}[]"
+                                        id="{{ sanitized_name }}-{{ data.id }}"
+                                        value="{{ data.name }}"
+                                        data-type="{{ sanitized_name }}-checkbox"
+                                        class="form-control text-sm rounded-md shadow-sm-light border dark:border-2 dark:focus:border-2 border-outline-clr focus:ring-theme-clr focus:border-theme-clr outline-none bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white size-[1.3rem] checked:bg-theme-clr"
+                                    >
+                                    <label for="{{ sanitized_name }}-{{ data.id }}" class="text-sm cursor-pointer w-full"> {{ data.name }} </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="controls p-2 flex items-center justify-between">
+                        <span class="list-controls text-sm flex items-center gap-2">
+                            <input type="checkbox" id="{{sanitized_name}}-select-all" data-type="{{ sanitized_name }}" class="select-all form-control text-sm rounded-md shadow-sm-light border dark:border-2 dark:focus:border-2 border-outline-clr focus:ring-theme-clr focus:border-theme-clr outline-none bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white size-[1.3rem] checked:bg-theme-clr">
+                            <label for="{{sanitized_name}}-select-all" class="text-sm cursor-pointer">Select All</label>
+                        </span>
+                        
+                        {{ render_btn(
+                            "Add to menu",
+                            type="outline",
+                            shape="rounded",
+                            classes="add-to-menu-btn",
+                            tag="button",
+                            btn_type="submit",
+                            data_type=sanitized_name
+                        ) }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center text-gray-500 py-2">
+                    No {{ accordion_title|lower }} available
+                </div>
+            {% endif %}
+        {% elif content_type == 'form' %}
+            <form class="space-y-3">
+                <div class="form-group flex items-center">
+                    <label for="custom-url" class="text-sm me-2 flex-1"> URL </label>
+                    <input 
+                        type="text"
+                        name="url"
+                        id="custom-url"
+                        placeholder="https://"
+                        autocomplete="off"
+                        class="text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2 border-outline-clr focus:ring-theme-clr focus:border-theme-clr p-2 py-1.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white flex-1"
+                    >
+                </div>
+                <div class="form-group flex items-center">
+                    <label for="custom-link-text" class="text-sm me-2 flex-1">Link Text</label>
+                    <input 
+                        type="text"
+                        name="link_text"
+                        id="custom-link-text"
+                        placeholder="Link Text"
+                        autocomplete="off"
+                        class="text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2 border-outline-clr focus:ring-theme-clr focus:border-theme-clr p-2 py-1.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white flex-1"
+                    >
+                </div>
+                {{ render_btn("Add to menu", type="outline", shape="rounded", classes="add-to-menu-btn", tag="button", btn_type="submit", data_type=sanitized_name) }}
+            </form>
+        {% endif %}
+    </div>
+</div>
+{%- endmacro %}
+
+{% macro render_menu_item(item, siblings) -%}
+    {% set menu_item_key = item.item_type ~ '-' ~ item.ref_id %}
+    <div class="menu-item"
+        data-key="{{menu_item_key}}"
+        data-type="{{item.item_type}}"
+        data-ref-id="{{item.ref_id}}"
+        data-db-id="{{ item.id }}"
+    >
+        <div class="accordion border border-gray-400" data-accordion="collapse">
+            <div class="item-header px-3 py-3 flex items-center justify-between gap-4 bg-gray-200">
+                <span class="menu-item-name flex-1"> {{item.name}} </span>
+                <span class="menu-type"> {{item.item_type}} </span>
+                <span
+                    data-accordion-target="#{{menu_item_key}}-body"
+                    aria-expanded="false"
+                    aria-controls="{{menu_item_key}}-body"
+                    class="menu-type cursor-pointer p-2"
+                >
+                    <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+                    </svg>
+                </span>
+            </div>
+            
+            <div id="{{menu_item_key}}-body" class="item-body hidden px-3 py-2">
+                <div class="form grid gap-4 sm:grid-cols-2 sm:gap-6 mb-4">
+                    <div class="form-group !mb-0 sm:col-span-2">
+                        <label for="" class="block mb-2 text-sm font-medium text-gray-500">
+                            Navigation Label
+                        </label>
+                        <input type="text" name="menu-item-name" value="{{item.label}}" class="form-control text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2 border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2 py-1.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900">
+                    </div>
+                    
+                    <div class="form-group !mb-0">
+                        <label for="" class="block mb-2 text-sm font-medium text-gray-500">
+                            Menu Parent
+                        </label>
+                        <select name="parent-select" id="" class="parent-select form-control text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2 border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2 py-1.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900">
+                            <option value="">-- No Parent --</option>
+                            {# Define a macro to recursively collect all child IDs for the current item, so that we don’t allow selecting one of its own descendants as a parent #}
+                            {% macro add_child_ids(item, ns) %}
+                                {% for child in item.children %}
+                                    {% set _ = ns.ids.append(child.id) %}
+                                    {% if child.children %}
+                                        {{ add_child_ids(child, ns) }}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endmacro %}
+
+                            {# Define a recursive macro to render parent options in hierarchical order, sorted by the order of top level items #}
+                            {% macro render_parent_options(items) %}
+                                {% for parent_item in items|sort(attribute='order') %}
+                                    {# Do not allow the current item to be parent of itself #}
+                                    {% if parent_item.id != item.id %}
+                                        {# Prevent assigning one of its descendants as parent #}
+                                        {% set ns = namespace(ids=[]) %}
+                                        {{ add_child_ids(item, ns) }}
+                                        {% if parent_item.id not in ns.ids %}
+                                            <option value="{{ parent_item.item_type }}-{{ parent_item.ref_id }}"
+                                                {% if item.parent_id and parent_item.id == item.parent_id %}selected{% endif %}>
+                                                {{ parent_item.name }}
+                                            </option>
+                                            {# If the parent item has children, render them next, preserving the order hierarchy #}
+                                            {% if parent_item.children %}
+                                                {{ render_parent_options(parent_item.children) }}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endmacro %}
+
+                            {# Start with the top level items (those without a parent) sorted by their order. Their children will be rendered immediately after their parent regardless of their own 'order' value. #}
+                            {{ render_parent_options(nav_menu.items | selectattr("parent_id", "equalto", None) | list) }}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group !mb-0">
+                        <label for="" class="block mb-2 text-sm font-medium text-gray-500">
+                            Menu Order
+                        </label>
+                        <select name="order-select" id="" class="order-select form-control text-sm rounded-lg shadow-sm-light border dark:border-2 dark:focus:border-2 border-outline-clr focus:ring-theme-clr focus:border-theme-clr block w-full p-2 py-1.5 placeholder-gray-400 outline-none bg-gray-50 text-gray-900">
+                            {% if item.parent_id %}
+                                {% set parent_siblings = siblings %}
+                            {% else %}
+                                {% set ns = namespace(siblings=[]) %}
+                                {% for sibling in siblings %}
+                                    {% if sibling.parent_id == None %}
+                                        {% set _ = ns.siblings.append(sibling) %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% set parent_siblings = ns.siblings %}
+                            {% endif %}
+
+                            {% for i in range(1, parent_siblings|length + 1) %}
+                                <option value="{{ i }}" {% if loop.index == item.order %}selected{% endif %}>
+                                    {{ i }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="item-controls my-4">
+                    <a href="#" class="btn remove-item-btn border border-theme-danger-solid rounded-md py-1 px-4 text-sm text-alert-danger-solid hover:text-white hover:bg-theme-danger-solid">Remove</a>
+                </div>
+            </div>
+        </div>
+
+        {% if item.children %}
+            <div class="children pl-8 pt-2 space-y-2">
+                {% for child in item.children|sort(attribute='order') %}
+                    {{ render_menu_item(child, item.children) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+{%- endmacro %}
+
+<section id="nav-menu-settings" class="nav-menu-settings">
+    <div class="relative overflow-x-auto mx-auto max-w-full pb-6 lg:py-16 lg:pt-1">
+        {% if nav_menu %}
+        <div id="main-header" class="flex items-center justify-between flex-wrap lg:flex-row space-y-4 lg:space-y-0 pb-6">
+            <div class="page-head">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Customize Menu</h2>
+                <p class="text-md text-gray-600 dark:text-white">
+                    Edit your menu below. Do not forget to save your changes!
+                </p>
+            </div>
+        </div>
+
+        <div class="manage-menus">
+            <div class="p-4 bg-white border border-outline-clr rounded-lg flex justify-between items-center">
+                <div class="menu-info" data-menu-slug="{{ nav_menu.slug }}">
+                    <span>{{ nav_menu.name }}</span>
+                    {% if nav_menu.description %}
+                        <span class="block text-sm text-gray-600">
+                            {{ nav_menu.description }}
+                        </span>
+                    {% endif %}
+                </div>
+                <div class="flex space-x-2">
+                    <!-- {{ render_btn("Delete", "outline", url=url_for('web_admin.delete_nav_menu', identifier=nav_menu.slug, action='delete'), classes="border-theme-danger-solid text-theme-danger-solid hover:bg-theme-danger-solid" ) }} -->
+                </div>
+            </div>
+
+            <div class="edit-menu-frame mt-6">
+                <div class="flex flex-wrap lg:flex-nowrap gap-6 justify-center">
+                    <!-- Left side: Available Items (Accordion) -->
+                    <div class="available-items w-full md:w-1/3 rounded-lg">
+                        <h3 class="text-xl font-bold mb-4">Add menu items</h3>
+                        <div class="accordion overflow-hidden border border-outline-clr rounded-lg" data-accordion="collapse">
+                            <!-- Custom Links Accordion -->
+                            {{ render_menu_accordion_item("Custom", content_type='form') }}
+
+                            <!-- Pages Accordion -->
+                            {% if pages %}
+                                {{ render_menu_accordion_item("Page", pages) }}
+                            {% endif %}
+
+                            <!-- Categories Accordion -->
+                            {% if categories %}
+                                {{ render_menu_accordion_item( "Category", categories ) }}
+                            {% endif %}
+
+                            <!-- Tags Accordion -->
+                            {% if tags %}
+                                {{ render_menu_accordion_item( "Tag", tags ) }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Right side: Structured Menu Builder -->
+                    <div class="structured-menu w-full md:w-2/3 border border-dashed border-outline-clr p-4 rounded-lg">
+                        <div class="head mb-4">
+                            <h3 class="text-lg font-bold">Your Menu Structure</h3>
+                        </div>
+                        <div class="menu-drop-area min-h-[200px] border border-gray-300 rounded" role="region" aria-label="Menu Structure builder" aria-describedby="drop-area-instructions">
+                            <div class="menu-items-list px-4 pb-12 pt-6 space-y-2 w-full h-full">
+                                {% if nav_menu.items %}
+                                    {% for menu_item in nav_menu.items if not menu_item.parent_id %}
+                                        {{ render_menu_item(menu_item, nav_menu.items) }}
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                <div class="no-menu-items flex items-center justify-center w-full h-full min-h-[200px] {% if nav_menu.items %} hidden {% endif %} ">
+                                    <p id="drop-area-instructions" class="text-gray-500">
+                                        Add menu items from the column on the left.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="structured-menu-foot w-full">
+                            <div class="action-btns w-full pt-4">
+                                {{ render_btn("Save menu") }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% else %}
+        <div class="flex items-center justify-center h-[73svh]">
+            <div class="p-6 max-w-full md:max-w-md lg:max-w-lg bg-white border border-outline-clr rounded-lg shadow-lg text-center">
+                <p class="mb-4 text-gray-700">You don't have any nav menu, create your first Menu.</p>
+                <a href="" class="btn inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-lg bg-theme-clr hover:bg-theme-hvr-clr">
+                Create New Menu
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+    <script src="{{ url_for('static', filename='web_admin/library/sortable/sortable.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='web_admin/js/menu-builder.js') }}"></script>
+
+{% endblock %}

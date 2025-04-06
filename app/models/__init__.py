@@ -21,15 +21,15 @@ from .product import Product, Tag, product_category, product_tag, productVariati
 from .order import CustomerOrder, OrderItem
 from .payment import Payment, Transaction
 from .subscription import Subscription, SubscriptionPlan
-from .nav import NavigationBarItem, create_nav_items
+from .nav_menu import NavigationMenu, NavMenuItem
 from .settings import GeneralSetting, PaymentMethodSettings
-from .defaults import create_default_super_admin, create_roles, initialize_settings, initialize_payment_method_settings
+from .defaults import create_default_super_admin, create_roles, initialize_settings, initialize_payment_method_settings, initialize_nav_menu
 
 
 def create_db_defaults(app: Flask) -> None:
     with app.app_context():
         create_roles()
         create_default_super_admin()
-        create_nav_items()
+        initialize_nav_menu()
         initialize_settings()
         initialize_payment_method_settings()

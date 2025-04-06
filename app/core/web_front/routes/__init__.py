@@ -7,4 +7,4 @@ A Flask blueprint named 'main' is created to group these routes.
 @link: https://github.com/zeddyemy
 '''
 
-from . import auth, home, top_up, orders, payments
+from . import auth, home, top_up, orders, payments, products, categories, product_tags

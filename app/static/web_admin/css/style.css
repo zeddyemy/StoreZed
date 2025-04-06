@@ -162,8 +162,16 @@
 /* UTILITY CLASSES */
 .btn {
     position: relative;
+    display: inline-block;
+    outline: none;
+    text-decoration: none;
     transition: var(--transition);
+    isolation: isolate;
 }
 .btn:active {
     transform: scale(0.9);
+}
+
+.btn .btn-txt {
+    pointer-events: none;
 }

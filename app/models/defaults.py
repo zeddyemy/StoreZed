@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app, url_for
 from slugify import slugify
 from sqlalchemy import inspect
 
@@ -14,7 +14,7 @@ from ..enums.settings import GeneralSettingsKeys, PaymentMethodSettingKeys
 
 
 def create_default_super_admin(clear: bool = False) -> None:
-    if inspect(db.engine).has_table('role'):
+    if inspect(db.engine).has_table("role"):
         admin_role = Role.query.filter_by(name=RoleNames.ADMIN).first()
         super_admin_role = Role.query.filter_by(name=RoleNames.SUPER_ADMIN).first()
         
@@ -34,7 +34,7 @@ def create_default_super_admin(clear: bool = False) -> None:
             db.session.add(super_admin_role)
             db.session.commit()
     
-    if inspect(db.engine).has_table('app_user'):
+    if inspect(db.engine).has_table("app_user"):
         admin = AppUser.query \
                 .join(UserRole, AppUser.id == UserRole.app_user_id) \
                 .join(Role, UserRole.role_id == Role.id) \
@@ -51,12 +51,12 @@ def create_default_super_admin(clear: bool = False) -> None:
         
         if not admin:
             admin_user = AppUser(
-                username=current_app.config['DEFAULT_SUPER_ADMIN_USERNAME'],
-                email='admin@admin.com'
+                username=current_app.config["DEFAULT_SUPER_ADMIN_USERNAME"],
+                email="admin@admin.com"
             )
-            admin_user.password=current_app.config['DEFAULT_SUPER_ADMIN_PASSWORD']
+            admin_user.password=current_app.config["DEFAULT_SUPER_ADMIN_PASSWORD"]
             
-            admin_user_profile = Profile(firstname='admin', app_user=admin_user)
+            admin_user_profile = Profile(firstname="admin", app_user=admin_user)
             admin_user_address = Address(app_user=admin_user)
             admin_user_wallet = Wallet(app_user=admin_user)
             
@@ -131,3 +131,75 @@ def initialize_payment_method_settings():
                     db.session.add(setting)
 
         db.session.commit()
+
+
+def initialize_nav_menu(clear: bool = False) -> None:
+    """
+    Initializes the navigation menu with default items.
+    
+    Args:
+        clear (bool): If True, clears the existing navigation menu before initializing. Defaults to False.
+    Returns:
+        None
+    
+    ---
+    This function checks if the 'navigation_menu' table exists in the database. If it does, and the `clear` parameter is set to True,
+    
+    it deletes all existing entries in the 'navigation_menu' table. It then checks if a main menu exists; if not, it creates one.
+    If the 'nav_menu_item' table exists, it populates the main menu with default items if they do not already exist.
+    """
+    from .nav_menu import NavigationMenu, NavMenuItem
+    from ..utils.helpers.pages import get_predefined_pages
+    
+    console_log(data="Initializing navigation menu")
+    
+    if inspect(db.engine).has_table("navigation_menu"):
+        console_log(data="'navigation_menu' table exists")
+        
+        if clear:
+            console_log(data="Clearing existing navigation menu")
+            NavigationMenu.query.delete()
+            db.session.commit()
+        
+        main_menu = NavigationMenu.query.first()
+        if not main_menu:
+            console_log(data="Creating main menu")
+            main_menu = NavigationMenu(name="Main Menu", slug="main-menu")
+            db.session.add(main_menu)
+            db.session.commit()
+            
+            # Populate main menu with items only if it was created
+            if inspect(db.engine).has_table("nav_menu_item"):
+                console_log(data="'nav_menu_item' table exists, populating with default items")
+                pages = get_predefined_pages()
+                default_items = [
+                    {
+                        "name": page.name,
+                        "url": url_for(page.endpoint),
+                        "order": page.id,
+                        "is_active": True,
+                        "item_type": "page",
+                        "ref_id": page.id,
+                    } 
+                    for page in pages
+                ]
+            
+                new_items = []
+                for menu_item in default_items:
+                    if not NavMenuItem.query.filter_by(name=menu_item["name"]).first():
+                        name = menu_item["name"]
+                        new_nav_item = NavMenuItem.create(name=name, label=name, slug=slugify(menu_item["name"]), url=menu_item["url"], order=menu_item["order"], is_active=menu_item["is_active"], item_type=menu_item["item_type"], ref_id=menu_item["ref_id"], menu_id=main_menu.id)
+                        
+                        new_items.append(new_nav_item)
+                
+                if new_items:
+                    db.session.bulk_save_objects(new_items)
+                    db.session.commit()
+                
+                console_log(data="Default menu items created successfully")
+            else:
+                console_log(data="No 'nav_menu_item' table found")
+        else:
+            console_log(data="Main menu already exists")
+    else:
+        console_log(data="No 'navigation_menu' table found")

@@ -49,6 +49,22 @@
             </li>
 
             <li>
+                <span class="flex items-center p-2 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group" aria-controls="dropdown-appearance-menu" data-collapse-toggle="dropdown-appearance-menu">
+                    <a class="flex items-center flex-1">
+                        <i class="bx bxs-brush flex-shrink-0 w-6 h-6 transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white text-2xl text-center my-auto"></i>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Appearance</span>
+                    </a>
+
+                    <i class="bx bx-chevron-down w-6 h-6 transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white text-2xl text-center my-auto cursor-pointer" aria-hidden="true"></i>
+                </span>
+                <ul id="dropdown-appearance-menu" class="hidden py-2 space-y-2">
+                    <li>
+                        <a href="{{url_for('web_admin.nav_menus')}}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Nav Menus</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
                 <span class="flex items-center p-2 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                     aria-controls="dropdown-settings-menu" data-collapse-toggle="dropdown-settings-menu">
                     <a href="{{url_for('web_admin.general_settings')}}" class="flex items-center flex-1">
@@ -63,9 +79,6 @@
                     </li>
                     <li>
                         <a href="{{url_for('web_admin.payment_settings')}}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Payment Settings</a>
-                    </li>
-                    <li>
-                        <a href="{{url_for('web_admin.navigation_settings')}}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Navigation Settings</a>
                     </li>
                 </ul>
             </li>

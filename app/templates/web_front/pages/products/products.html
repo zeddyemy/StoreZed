@@ -1,0 +1,55 @@
+{% extends 'web_front/base/base.html' %}
+{% block title %} Store - {{ super() }}{% endblock %}
+
+{% block content %}
+
+{% include 'web_front/components/wallet_balance.html' %}
+
+<section class="sec">
+    {% if pagination.items %}
+
+    <div class="products-table rounded-lg shadow-md border border-outline-clr overflow-y-hidden">
+        <table class="w-full shadow-md lg:rounded-lg text-sm text-left rtl:text-right bg-black/70 text-white">
+            <thead class="text-xs uppercase bg-black/70 text-white">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Name
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Price
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for product in pagination.items %}
+                    <tr class="border-b hover:bg-black/75">
+                        <td class="px-6 py-4">
+                            {{ product.name }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ format_monetary_value(product.selling_price) }}
+                        </td>
+
+                        <td class="px-6 py-4 flex items-center">
+                            <a href="#" class="btn px-3 py-2 text-xs font-medium text-center rounded-lg border border-theme-clr text-white hover:text-white hover:bg-theme-clr me-[10px]">Order</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+        
+        {% with data_in_db='Product', data_in_db_url=url_for('web_admin.add_new_product') %}
+            {% include 'web_front/components/no_data.html' %}
+        {% endwith %}
+    
+    {% endif %}
+</section>
+
+{% endblock %}

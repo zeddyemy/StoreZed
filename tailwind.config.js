@@ -20,6 +20,9 @@ module.exports = {
 				"alert-danger": "var(--alert-danger)",
 				"alert-danger-solid": "var(--alert-danger-solid)",
 
+				"theme-danger": "var(--theme-danger)",
+				"theme-danger-solid": "var(--theme-danger-solid)",
+
 				"alert-success": "var(--alert-success)",
 				"alert-success-solid": "var(--alert-success-solid)",
 

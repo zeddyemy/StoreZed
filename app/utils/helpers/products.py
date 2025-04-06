@@ -16,7 +16,7 @@ from flask_login import current_user
 
 from ...extensions import db
 from ...models.category import Category
-from ...models.product import Product, productVariations, product_category, product_tag
+from ...models.product import Product, Tag, productVariations, product_category, product_tag
 
 from .media import save_media
 from .basics import generate_slug
@@ -27,6 +27,7 @@ from .product_tags import save_tags
 def fetch_all_products(
         user_id: Optional[int] = None,
         cat_id: Optional[int] = None,
+        tag_id: Optional[int] = None,
         page_num: Optional[int] = None,
         search_term: Optional[str] = None,
         paginate: bool = True,
@@ -60,15 +61,12 @@ def fetch_all_products(
     )
     
     # Apply combined filters
-    if user_id is not None and cat_id is not None:
-        query = query.filter(
-            Product.user_id == user_id,
-            Product.category_id == cat_id
-        )
-    elif user_id is not None:
-        query = query.filter_by(user_id=user_id)
-    elif cat_id is not None:
-        query = query.filter_by(category_id=cat_id)
+    if user_id is not None:
+        query = query.filter(Product.user_id == user_id)
+    if cat_id is not None:
+        query = query.filter(Product.categories.any(Category.id == cat_id))
+    if tag_id is not None:
+        query = query.filter(Product.tags.any(Tag.id == tag_id))
     
     # Apply search filters
     query = Product.add_search_filters(query, search_term)

@@ -6,4 +6,4 @@ License: MIT, see LICENSE for more details.
 Package: BitnShop
 """
 
-from . import home, auth, users, products, categories, tags, settings, navigation, orders
+from . import home, auth, users, products, categories, tags, settings, nav_menu, orders

@@ -15,7 +15,7 @@ import pycountry
 from ....models.payment_gateway import PaymentGateway, PaymentGatewayName
 from ...helpers.loggers import console_log
 from ...constants.currencies import CURRENCY_SYMBOLS
-from ...helpers.nav_bar import get_cached_nav_items
+from ...helpers.nav_menu import get_cached_menu_items
 
 def get_day_choices(include_default: bool = True) -> list[tuple[str, str]]:
     """
@@ -74,14 +74,14 @@ class GeneralSettingsForm(FlaskForm):
         ]
     
 
-def get_nav_item_choices():
+def get_menu_item_choices():
     choices = [("", "— Select Parent —")]
     
-    choices.extend([(str(nav.get("id")), nav.get("name")) for nav in get_cached_nav_items()])
+    choices.extend([(str(menu_item.get("id")), menu_item.get("name")) for menu_item in get_cached_menu_items()])
     
     return choices
 
-class NavigationItemsForm(FlaskForm):
+class MenuItemsForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired()])
     url = StringField('URL', validators=[InputRequired()])
     order = IntegerField('Order', validators=[Optional()])
@@ -101,4 +101,4 @@ class NavigationItemsForm(FlaskForm):
         
         super().__init__(*args, **kwargs)
         
-        self.parent_id.choices = get_nav_item_choices()
+        self.parent_id.choices = get_menu_item_choices()
