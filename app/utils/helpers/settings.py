@@ -27,9 +27,26 @@ def get_default_setting(key: GeneralSettingsKeys) -> str:
         str: The default value for the setting, or an empty string if not explicitly defined.
     """
     
+    from flask import current_app, has_request_context, request
+    
+    # Get the current domain
+    if has_request_context():
+        current_domain = request.host_url.rstrip('/')
+    else:
+        # Fallback to configured domain or localhost
+        server_name = current_app.config.get('SERVER_NAME', 'localhost:5000')
+        scheme = current_app.config.get('PREFERRED_URL_SCHEME', 'http')
+        current_domain = f"{scheme}://{server_name}"
+    
+    
+    console_log("current_domain", current_domain)
+    
     defaults = {
         GeneralSettingsKeys.SITE_TITLE: "My E-commerce Site",
         GeneralSettingsKeys.TIMEZONE: "UTC",
+        
+        GeneralSettingsKeys.PLATFORM_URL: current_domain,  # Where your application files live
+        GeneralSettingsKeys.SITE_URL: current_domain,      # Where your site is accessed by users
         
         GeneralSettingsKeys.CURRENCY: "NGN",
         GeneralSettingsKeys.NUMBER_OF_DECIMALS: "2",
@@ -69,7 +86,10 @@ def get_general_setting(key: GeneralSettingsKeys, default=None) -> str | None:
     
     setting: GeneralSetting = GeneralSetting.query.filter_by(key=str(key)).first()
     
-    return setting.value if setting else default
+    console_log("setting", setting)
+    console_log("setting value", setting.value)
+    
+    return setting.value if setting and setting.value else default
 
 
 def save_general_setting(key: GeneralSettingsKeys, value: str):

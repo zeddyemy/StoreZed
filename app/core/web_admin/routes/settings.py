@@ -31,6 +31,8 @@ def general_settings():
         # Pre-fill form with existing settings
         site_title=settings.get(str(GeneralSettingsKeys.SITE_TITLE), ""),
         tagline=settings.get(str(GeneralSettingsKeys.TAGLINE), ""),
+        platform_url=settings.get(str(GeneralSettingsKeys.PLATFORM_URL), ""),
+        site_url=settings.get(str(GeneralSettingsKeys.SITE_URL), ""),
         admin_email=settings.get(str(GeneralSettingsKeys.ADMIN_EMAIL), ""),
         timezone=settings.get(str(GeneralSettingsKeys.TIMEZONE), ""),
         week_starts_on=settings.get(str(GeneralSettingsKeys.WEEK_STARTS_ON)),

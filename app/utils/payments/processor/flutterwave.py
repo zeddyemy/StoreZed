@@ -40,6 +40,8 @@ class FlutterwaveProcessor(PaymentProcessor):
         # Convert to Decimal first for validation
         amount_decimal = Decimal(str(amount)) if isinstance(amount, float) else amount
         
+        console_log("redirect_url", redirect_url)
+        
         data = {
             "tx_ref": self.reference,
             "amount": str(amount_decimal),

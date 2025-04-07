@@ -126,6 +126,8 @@ class PaymentManager:
                 else:
                     redirect_url = f"{get_platform_url()}/payments/verify"
             
+            console_log("redirect_url", redirect_url)
+            
             customer_data = {
                 "email": user.email,
                 "name": user.full_name

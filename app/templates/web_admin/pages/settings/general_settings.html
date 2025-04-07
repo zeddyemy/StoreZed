@@ -73,7 +73,7 @@
                     <div class="card-body px-5 py-5 pt-1">
                         <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-4">
                             {% for field in form %}
-                                {% if field.id in ['site_title', 'tagline', 'admin_email', 'timezone', 'week_starts_on'] %}
+                                {% if field.id in ['site_title', 'tagline', 'platform_url', 'site_url', 'admin_email', 'timezone', 'week_starts_on'] %}
                                     {{ render_field(field) }}
                                 {% endif %}
                             {% endfor %}
