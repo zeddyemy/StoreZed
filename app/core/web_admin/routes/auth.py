@@ -140,7 +140,10 @@ def login():
         
         else:
             console_log('form.errors', form.errors)
-            flash("Something went Wrong. Please Try Again.", 'error')
+            if 'csrf_token' in form.errors:
+                flash("Session expired. Please try again.", 'error')
+            else:
+                flash("Something went Wrong. Please Try Again.", 'error')
     
     return render_template('web_admin/pages/auth/login.html', form=form, page='auth')
 

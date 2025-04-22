@@ -4,10 +4,21 @@ from flask import Flask
 from typing import Optional, List
 
 from app.utils.helpers.basics import parse_bool
+from app.utils.date_time import timedelta
 
 class Config:
     ENV: str = os.getenv("ENV", "development")
     SECRET_KEY: str = os.getenv("SECRET_KEY", "insecure-dev-secret")  # Warn in prod
+    # Add these CSRF settings
+    WTF_CSRF_ENABLED = True
+    WTF_CSRF_TIME_LIMIT = 3600  # 1 hour
+    WTF_CSRF_SSL_STRICT = True  # Enable if using HTTPS
+    
+    # Session settings
+    SESSION_COOKIE_SECURE = True  # Enable if using HTTPS
+    SESSION_COOKIE_HTTPONLY = True
+    PERMANENT_SESSION_LIFETIME = timedelta(days=7)
+    
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SERVER_NAME: Optional[str] = os.getenv("FLASK_SERVER_NAME")
     PREFERRED_URL_SCHEME: Optional[str] = os.getenv("FLASK_URL_SCHEME", "http")
