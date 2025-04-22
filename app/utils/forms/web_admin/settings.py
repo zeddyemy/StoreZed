@@ -2,8 +2,8 @@
 Author: Emmanuel Olowu
 Link: https://github.com/zeddyemy
 Copyright: © 2024 Emmanuel Olowu <zeddyemy@gmail.com>
-License: MIT, see LICENSE for more details.
-Package: BitnShop
+License: GNU, see LICENSE for more details.
+Package: StoreZed
 """
 from wsgiref.validate import validator
 from flask_wtf import FlaskForm
@@ -45,12 +45,12 @@ class GeneralSettingsForm(FlaskForm):
     platform_url = StringField(
         'Platform Address (URL)',
         validators=[DataRequired(), URL()],
-        description="The URL where your BitnShop application files are installed.",
+        description="The URL where your StoreZed application files are installed.",
     )
     site_url = StringField(
         'Site Address (URL)',
         validators=[DataRequired(), URL()],
-        description="Enter the same address here unless you want your site home page to be different from the BitnShop installation directory."
+        description="Enter the same address here unless you want your site home page to be different from the StoreZed installation directory."
     )
     
     admin_email = StringField('Administration Email Address', description="This address is used for admin purposes. If you change this, an email will be sent to your new address to confirm it. The new address will not become active until confirmed.")

@@ -24,6 +24,19 @@
             <div class="flex items-center">
                 <div class="flex items-center ms-3">
                     <div>
+                        <a href="{{url_for('web_front.view_cart')}}">
+                            <span class="flex items-center justify-center text-sm bg-transparent hover:bg-gray-700 rounded-full focus:ring-4 focus:ring-gray-600 size-9 p-1 cursor-pointer">
+                                <span class="sr-only">View Cart</span>
+                                <span>
+                                    <i class="bx bxs-cart-alt flex-shrink-0 transition duration-75 text-gray-400 group-hover:text-white text-2xl text-center my-auto"></i>
+                                </span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex items-center ms-3">
+                    <div>
                         <button type="button"
                             class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-600"
                             aria-expanded="false" data-dropdown-toggle="dropdown-user">
@@ -32,8 +45,10 @@
                                 src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
                         </button>
                     </div>
-                    <div class="z-50 hidden my-4 text-base list-none divide-y divide-gray-600 rounded shadow bg-gray-700"
-                        id="dropdown-user">
+                    <div 
+                        id="dropdown-user"
+                        class="z-50 hidden my-4 text-base list-none divide-y divide-gray-600 rounded shadow bg-gray-700"
+                    >
                         <div class="px-4 py-3" role="none">
                             <p class="text-sm text-white" role="none">
                                 Neil Sims
@@ -44,22 +59,12 @@
                         </div>
                         <ul class="py-1" role="none">
                             <li>
-                                <a href="#"
+                                <a href="{{url_for('web_front.index')}}"
                                     class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600 hover:text-white"
                                     role="menuitem">Dashboard</a>
                             </li>
                             <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600 hover:text-white"
-                                    role="menuitem">Settings</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600 hover:text-white"
-                                    role="menuitem">Earnings</a>
-                            </li>
-                            <li>
-                                <a href="#"
+                                <a href="{{url_for('web_front.logout')}}"
                                     class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600 hover:text-white"
                                     role="menuitem">Sign out</a>
                             </li>

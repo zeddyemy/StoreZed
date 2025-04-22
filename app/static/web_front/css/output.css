@@ -1336,12 +1336,12 @@ input:checked + .toggle-bg {
   display: flex;
 }
 
-.inline-flex {
-  display: inline-flex;
-}
-
 .\!inline-flex {
   display: inline-flex !important;
+}
+
+.inline-flex {
+  display: inline-flex;
 }
 
 .table {
@@ -1379,6 +1379,16 @@ input:checked + .toggle-bg {
 .size-\[190px\] {
   width: 190px;
   height: 190px;
+}
+
+.size-10 {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.size-9 {
+  width: 2.25rem;
+  height: 2.25rem;
 }
 
 .\!h-full {
@@ -1549,10 +1559,6 @@ input:checked + .toggle-bg {
 
 .w-full {
   width: 100%;
-}
-
-.w-\[200px\] {
-  width: 200px;
 }
 
 .min-w-80 {
@@ -2045,29 +2051,9 @@ input:checked + .toggle-bg {
   background-color: rgb(255 255 255 / 0.5);
 }
 
-.bg-gray-700\/90 {
-  background-color: rgb(55 65 81 / 0.9);
-}
-
-.bg-gray-700\/20 {
-  background-color: rgb(55 65 81 / 0.2);
-}
-
-.bg-gray-600\/90 {
-  background-color: rgb(75 85 99 / 0.9);
-}
-
-.bg-gray-600\/80 {
-  background-color: rgb(75 85 99 / 0.8);
-}
-
-.bg-gray-800\/80 {
-  background-color: rgb(31 41 55 / 0.8);
-}
-
-.bg-gray-900 {
+.bg-gray-300 {
   --tw-bg-opacity: 1;
-  background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
 }
 
 .bg-cover {
@@ -2213,11 +2199,6 @@ input:checked + .toggle-bg {
   padding-bottom: 2rem;
 }
 
-.\!py-1 {
-  padding-top: 0.25rem !important;
-  padding-bottom: 0.25rem !important;
-}
-
 .pb-12 {
   padding-bottom: 3rem;
 }
@@ -2244,6 +2225,14 @@ input:checked + .toggle-bg {
 
 .pl-11 {
   padding-left: 2.75rem;
+}
+
+.pl-4 {
+  padding-left: 1rem;
+}
+
+.pl-8 {
+  padding-left: 2rem;
 }
 
 .ps-10 {
@@ -2284,22 +2273,6 @@ input:checked + .toggle-bg {
 
 .pt-6 {
   padding-top: 1.5rem;
-}
-
-.pl-6 {
-  padding-left: 1.5rem;
-}
-
-.pl-4 {
-  padding-left: 1rem;
-}
-
-.pl-2 {
-  padding-left: 0.5rem;
-}
-
-.pl-8 {
-  padding-left: 2rem;
 }
 
 .text-left {
@@ -2681,11 +2654,6 @@ input:checked + .toggle-bg {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-gray-800:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
-}
-
 .hover\:text-blue-600:hover {
   --tw-text-opacity: 1;
   color: rgb(28 100 242 / var(--tw-text-opacity));
@@ -3038,10 +3006,6 @@ input:checked + .toggle-bg {
 
   .md\:mt-6 {
     margin-top: 1.5rem;
-  }
-
-  .md\:block {
-    display: block;
   }
 
   .md\:inline {

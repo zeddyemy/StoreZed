@@ -5,7 +5,7 @@ It sets up SQLAlchemy, Flask-Mail, and Celery with the configurations defined in
 
 @author: Emmanuel Olowu
 @link: https://github.com/zeddyemy
-@package: Estate Management
+@package: StoreZed
 '''
 
 from flask_cors import CORS

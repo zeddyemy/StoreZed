@@ -2,8 +2,8 @@
 Author: Emmanuel Olowu
 Link: https://github.com/zeddyemy
 Copyright: © 2024 Emmanuel Olowu <zeddyemy@gmail.com>
-License: MIT, see LICENSE for more details.
-Package: BitnShop
+License: GNU, see LICENSE for more details.
+Package: StoreZed
 """
 from sqlalchemy import inspect, or_
 from sqlalchemy.orm import backref

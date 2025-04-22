@@ -201,7 +201,7 @@ class Tag(db.Model):
         }
 
 
-class productVariations(db.Model):
+class ProductVariant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
     name = db.Column(db.String(100), nullable=False)

@@ -16,7 +16,7 @@ from flask_login import current_user
 
 from ...extensions import db
 from ...models.category import Category
-from ...models.product import Product, Tag, productVariations, product_category, product_tag
+from ...models.product import Product, Tag, ProductVariant, product_category, product_tag
 
 from .media import save_media
 from .basics import generate_slug

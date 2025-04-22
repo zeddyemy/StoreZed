@@ -9,4 +9,4 @@ from flask import Blueprint
 
 api_bp: Blueprint = Blueprint('api', __name__, url_prefix='/api')
 
-from .routes import base, auth, categories, payments, products, settings, tags
+from .routes import base, auth, categories, payments, products, settings, tags, cart

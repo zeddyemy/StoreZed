@@ -2,7 +2,7 @@
 Author: Emmanuel Olowu
 Link: https://eshomonu.com
 Copyright: © 2024 Emmanuel Olowu <zeddyemy@gmail.com>
-License: MIT, see LICENSE for more details.
+License: GNU, see LICENSE for more details.
 """
 
 from flask import render_template, request, flash, redirect, abort, url_for
