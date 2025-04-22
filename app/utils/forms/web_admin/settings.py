@@ -81,7 +81,7 @@ class GeneralSettingsForm(FlaskForm):
         super().__init__(*args, **kwargs)
         self.week_starts_on.choices = get_day_choices(False)
         self.currency.choices = [
-            ( currency.alpha_3, f"{currency.name} ({CURRENCY_SYMBOLS.get(currency.alpha_3, "")}) — {currency.alpha_3}" )
+            ( currency.alpha_3, currency.name + " (" + CURRENCY_SYMBOLS.get(currency.alpha_3, "") + ") — " + currency.alpha_3 )
             for currency in sorted(pycountry.currencies, key=lambda c: c.name)
         ]
     
