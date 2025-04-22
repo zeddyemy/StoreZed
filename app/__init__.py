@@ -8,6 +8,8 @@ from .models import AppUser, create_db_defaults
 from .utils.date_time import timezone
 from .utils.hooks import register_hooks
 from .utils.helpers.loggers import console_log
+from sqlalchemy.orm import joinedload
+from .extensions import db
 
 
 def create_app(config_name=Config.ENV, create_defaults=True):
@@ -30,7 +32,7 @@ def create_app(config_name=Config.ENV, create_defaults=True):
     @login_manager.user_loader
     def load_user(user_id):
         try:
-            return AppUser.query.get(int(user_id))
+            return db.session.query(AppUser).options(joinedload(AppUser.roles)).get(int(user_id))
         except Exception as e:
             app.logger.error(f"Error loading user {user_id}: {e}")
             return None

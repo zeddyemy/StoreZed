@@ -3,6 +3,7 @@
 .venv/
 .wsl_env/
 migrations/
+migrations_l/
 migrations_p/
 migrations_s/
 node_modules/
