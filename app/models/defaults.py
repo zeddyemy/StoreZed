@@ -167,39 +167,39 @@ def initialize_nav_menu(clear: bool = False) -> None:
             main_menu = NavigationMenu(name="Main Menu", slug="main-menu")
             db.session.add(main_menu)
             db.session.commit()
-            
-            # Populate main menu with items only if it was created
-            if inspect(db.engine).has_table("nav_menu_item"):
-                console_log(data="'nav_menu_item' table exists, populating with default items")
-                pages = get_predefined_pages()
-                default_items = [
-                    {
-                        "name": page.name,
-                        "url": url_for(page.endpoint),
-                        "order": page.id,
-                        "is_active": True,
-                        "item_type": "page",
-                        "ref_id": page.id,
-                    } 
-                    for page in pages
-                ]
-            
-                new_items = []
-                for menu_item in default_items:
-                    if not NavMenuItem.query.filter_by(name=menu_item["name"]).first():
-                        name = menu_item["name"]
-                        new_nav_item = NavMenuItem.create(name=name, label=name, slug=slugify(menu_item["name"]), url=menu_item["url"], order=menu_item["order"], is_active=menu_item["is_active"], item_type=menu_item["item_type"], ref_id=menu_item["ref_id"], menu_id=main_menu.id)
-                        
-                        new_items.append(new_nav_item)
-                
-                if new_items:
-                    db.session.bulk_save_objects(new_items)
-                    db.session.commit()
-                
-                console_log(data="Default menu items created successfully")
-            else:
-                console_log(data="No 'nav_menu_item' table found")
         else:
             console_log(data="Main menu already exists")
+        
+        # Populate main menu with items only if it was created
+        if inspect(db.engine).has_table("nav_menu_item"):
+            console_log(data="'nav_menu_item' table exists, populating with default items")
+            pages = get_predefined_pages()
+            default_items = [
+                {
+                    "name": page.get("name"),
+                    "url": url_for(page.get("endpoint")),
+                    "order": page.get("id"),
+                    "is_active": True,
+                    "item_type": "page",
+                    "ref_id": page.get("id"),
+                } 
+                for page in pages
+            ]
+            
+            new_items = []
+            for menu_item in default_items:
+                if not NavMenuItem.query.filter_by(name=menu_item["name"]).first():
+                    name = menu_item["name"]
+                    new_nav_item = NavMenuItem.create(name=name, label=name, slug=slugify(menu_item["name"]), url=menu_item["url"], order=menu_item["order"], is_active=menu_item["is_active"], item_type=menu_item["item_type"], ref_id=menu_item["ref_id"], menu_id=main_menu.id)
+                    
+                    new_items.append(new_nav_item)
+                
+            if new_items:
+                db.session.bulk_save_objects(new_items)
+                db.session.commit()
+                
+            console_log(data="Default menu items created successfully")
+        else:
+            console_log(data="No 'nav_menu_item' table found")
     else:
         console_log(data="No 'navigation_menu' table found")
