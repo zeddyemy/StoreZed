@@ -103,8 +103,8 @@ def login():
         return redirect(redirect_url('web_admin.index'))
     
     if request.method == 'POST':
+        console_log('Form', data=request.form)
         if form.validate_on_submit():
-            console_log('Form', data=request.form)
             try:
                 email_username = form.email_username.data
                 pwd = form.pwd.data
