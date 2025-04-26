@@ -1,5 +1,5 @@
 from flask import Flask
-
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from config import Config, config_by_name, configure_logging
 from .context_processors import app_context_Processor
@@ -23,8 +23,22 @@ def create_app(config_name=Config.ENV, create_defaults=True):
         The Flask application instance.
     '''
     app = Flask(__name__)
+    
+    # --> Add ProxyFix BEFORE loading config <--
+    # Tell it Render likely sets X-Forwarded-Proto (1 proxy hop)
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    # --> End ProxyFix <--
+    
     app.config.from_object(config_by_name[config_name])
     app.context_processor(app_context_Processor)
+    
+    # --> Log some app config info <--
+    console_log("Flask App ENV", app.config.get("ENV"))
+    console_log("SESSION_COOKIE_SECURE", app.config.get("SESSION_COOKIE_SECURE"))
+    console_log("SESSION_COOKIE_SAMESITE", app.config.get("SESSION_COOKIE_SAMESITE"))
+    is_default_secret = app.config.get('SECRET_KEY') == 'insecure-dev-secret'
+    console_log("Using default SECRET_KEY?", is_default_secret, "WARNING")
+    # --> End logging <--
     
     # Initialize Flask extensions
     initialize_extensions(app=app)
@@ -48,7 +62,7 @@ def create_app(config_name=Config.ENV, create_defaults=True):
     from .blueprints import register_all_blueprints
     register_all_blueprints(app)
     
-    # create defaults
+    # initialize database defaults values
     if create_defaults:
         create_db_defaults(app)
     
