@@ -9,7 +9,7 @@ Package: StoreZed
 import sys
 from urllib.parse import urlparse
 from slugify import slugify
-from flask import render_template, request, Response, flash, redirect, url_for, abort
+from flask import render_template, request, Response, flash, redirect, url_for, abort, session
 from sqlalchemy.exc import ( IntegrityError, DataError, DatabaseError, InvalidRequestError, OperationalError )
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -103,7 +103,11 @@ def login():
         return redirect(redirect_url('web_admin.index'))
     
     if request.method == 'POST':
+        console_log(f"Session exists:", session.get('_id'))
+        console_log(f"CSRF token from form:", form.csrf_token.data)
+        console_log(f"CSRF token in session:", session.get('csrf_token'))
         console_log('Form', data=request.form)
+        
         if form.validate_on_submit():
             try:
                 email_username = form.email_username.data

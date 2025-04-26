@@ -70,6 +70,7 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG: bool = False
+    ENV = 'production'  # Explicitly set environment
     SQLALCHEMY_DATABASE_URI: str = os.getenv("DATABASE_URL")  # No default; enforce env var
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = 'Lax'  # Recommended for security
