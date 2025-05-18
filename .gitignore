@@ -7,10 +7,17 @@ migrations_l/
 migrations_p/
 migrations_s/
 node_modules/
-.env
-.flaskenv
 instance/
 codebase.txt
+
+# env files (can opt-in for committing if needed)
+# Ignore all .env files...
+.env.*
+.env
+.flaskenv
+# ...but DO NOT ignore .env.example
+!.env.example
+!.flaskenv.example
 
 # Editor directories and files
 .vscode/
