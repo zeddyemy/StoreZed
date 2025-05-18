@@ -10,13 +10,13 @@ class Config:
     ENV: str = os.getenv("ENV", "development")
     SECRET_KEY: str = os.getenv("SECRET_KEY", "insecure-dev-secret")  # Warn in prod
     # Add these CSRF settings
-    WTF_CSRF_ENABLED = True
-    WTF_CSRF_TIME_LIMIT = 3600  # 1 hour
-    WTF_CSRF_SSL_STRICT = True  # Enable if using HTTPS
+    WTF_CSRF_ENABLED: str = True
+    WTF_CSRF_TIME_LIMIT: int = 3600  # 1 hour
+    WTF_CSRF_SSL_STRICT: bool = True  # Enable if using HTTPS
     
     # Session settings
-    SESSION_COOKIE_SECURE = True  # Enable if using HTTPS
-    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SECURE: bool = True  # Enable if using HTTPS
+    SESSION_COOKIE_HTTPONLY: bool = True
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
     
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
@@ -70,10 +70,10 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG: bool = False
-    ENV = 'production'  # Explicitly set environment
+    ENV = "production"  # Explicitly set environment
     SQLALCHEMY_DATABASE_URI: str = os.getenv("DATABASE_URL")  # No default; enforce env var
-    SESSION_COOKIE_SECURE = True
-    SESSION_COOKIE_SAMESITE = 'Lax'  # Recommended for security
+    SESSION_COOKIE_SECURE: bool = True
+    SESSION_COOKIE_SAMESITE: str = "Lax"  # Recommended for security
 
 class TestingConfig(Config):
     TESTING: bool = True
