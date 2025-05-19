@@ -9,6 +9,8 @@ WORKDIR /app
 # Copy requirements FIRST to leverage Docker layer caching
 COPY requirements.txt requirements.txt
 
+RUN pip install --upgrade pip
+
 RUN pip install -r requirements.txt
 
 # Copy application code
