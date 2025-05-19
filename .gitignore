@@ -1,7 +1,8 @@
 **/__pycache__/
 .pytest_cache/
 .venv/
-.wsl_env/
+*.venv/
+*_venv/
 migrations/
 migrations.*/
 migrations_*/
