@@ -103,13 +103,6 @@ def login():
         return redirect(redirect_url('web_admin.index'))
     
     if request.method == 'POST':
-        console_log(f"Session exists:", session.get('_id'))
-        console_log(f"CSRF token from form:", form.csrf_token.data)
-        console_log(f"CSRF token in session:", session.get('csrf_token'))
-        console_log('Form', data=request.form)
-        console_log("CONFIG", data=current_app.config)
-        console_log("SESSION", data=session)
-        console_log("ENV VARIABLES", data=sys.modules['os'].environ)
         
         if form.validate_on_submit():
             try:

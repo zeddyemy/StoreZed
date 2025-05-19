@@ -32,14 +32,6 @@ def create_app(config_name=Config.ENV, create_defaults=True):
     app.config.from_object(config_by_name[config_name])
     app.context_processor(app_context_Processor)
     
-    # --> Log some app config info <--
-    console_log("Flask App ENV", app.config.get("ENV"))
-    console_log("SESSION_COOKIE_SECURE", app.config.get("SESSION_COOKIE_SECURE"))
-    console_log("SESSION_COOKIE_SAMESITE", app.config.get("SESSION_COOKIE_SAMESITE"))
-    is_default_secret = app.config.get('SECRET_KEY') == 'insecure-dev-secret'
-    console_log("Using default SECRET_KEY?", is_default_secret, "WARNING")
-    # --> End logging <--
-    
     # Initialize Flask extensions
     initialize_extensions(app=app)
     
