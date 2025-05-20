@@ -20,6 +20,11 @@ class Config:
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
     
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_size': 2,          # Max connections per worker
+        'pool_recycle': 300,      # Recycle connections every 5 minutes
+        'pool_pre_ping': True     # Check connection health before use
+    }
     SERVER_NAME: Optional[str] = os.getenv("FLASK_SERVER_NAME")
     PREFERRED_URL_SCHEME: Optional[str] = os.getenv("FLASK_URL_SCHEME", "http")
     
