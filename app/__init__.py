@@ -1,5 +1,7 @@
 from flask import Flask
 from werkzeug.middleware.proxy_fix import ProxyFix
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 
 from config import Config, config_by_name, configure_logging
 from .context_processors import app_context_Processor
@@ -8,7 +10,6 @@ from .models import AppUser, UserRole, create_db_defaults
 from .utils.date_time import timezone
 from .utils.hooks import register_hooks
 from .utils.helpers.loggers import console_log
-from sqlalchemy.orm import joinedload
 from .extensions import db
 
 
@@ -38,9 +39,8 @@ def create_app(config_name=Config.ENV, create_defaults=True):
     @login_manager.user_loader
     def load_user(user_id):
         try:
-            return db.session.query(AppUser).options(
-                joinedload(AppUser.roles).joinedload(UserRole.role)
-            ).get(int(user_id))
+            stmt = select(AppUser).options(joinedload(AppUser.roles)).filter_by(id=int(user_id))
+            return db.session.execute(stmt).scalar_one_or_none()
         except Exception as e:
             app.logger.error(f"Error loading user {user_id}: {e}")
             return None

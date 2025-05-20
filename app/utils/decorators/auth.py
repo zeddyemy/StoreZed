@@ -17,6 +17,7 @@ from flask.typing import ResponseReturnValue
 from flask_login import LoginManager, login_required, current_user as session_user
 
 from app.models import AppUser
+from app.extensions import db
 from ..helpers.loggers import console_log
 from ..helpers.http_response import error_response
 from ..helpers.user import get_current_user
@@ -71,6 +72,7 @@ def session_roles_required(*required_roles: str) -> Callable[[F], F]:
                 @web_admin_login_required()
                 def inner_wrapper(*args, **kwargs):
                     current_user = get_current_user()
+                    current_user = db.session.merge(current_user)
                     # Check if user has the required roles
                     if not any(user_role.role.name.value in required_roles for user_role in current_user.roles):
                         return render_template('web_admin/errors/misc/permission.html', msg="Access denied: You do not have the required roles to access this resource")
@@ -83,6 +85,7 @@ def session_roles_required(*required_roles: str) -> Callable[[F], F]:
                 @login_required()
                 def inner_wrapper(*args, **kwargs):
                     current_user = session_user
+                    current_user = db.session.merge(current_user)
                     # Check if user has the required roles
                     if not any(user_role.role.name.value in required_roles for user_role in current_user.roles):
                         return render_template('web_front/errors/permission.html', msg="Access denied: You do not have the required roles to access this resource")
