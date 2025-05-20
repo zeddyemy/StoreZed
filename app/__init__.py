@@ -4,7 +4,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from config import Config, config_by_name, configure_logging
 from .context_processors import app_context_Processor
 from .extensions import initialize_extensions, login_manager
-from .models import AppUser, create_db_defaults
+from .models import AppUser, UserRole, create_db_defaults
 from .utils.date_time import timezone
 from .utils.hooks import register_hooks
 from .utils.helpers.loggers import console_log
@@ -38,7 +38,9 @@ def create_app(config_name=Config.ENV, create_defaults=True):
     @login_manager.user_loader
     def load_user(user_id):
         try:
-            return db.session.query(AppUser).options(joinedload(AppUser.roles)).get(int(user_id))
+            return db.session.query(AppUser).options(
+                joinedload(AppUser.roles).joinedload(UserRole.role)
+            ).get(int(user_id))
         except Exception as e:
             app.logger.error(f"Error loading user {user_id}: {e}")
             return None

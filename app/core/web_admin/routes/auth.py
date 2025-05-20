@@ -135,8 +135,8 @@ def login():
             except Exception as e:
                 log_exception("An exception occurred trying to login", e)
                 flash(f"An unexpected error occurred.", "danger")
-            finally:
-                db.session.close()
+            # finally:
+            #     db.session.close()
         
         else:
             console_log('form.errors', form.errors)
