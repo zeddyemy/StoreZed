@@ -100,6 +100,8 @@ def sign_up():
 def login():
     form: LoginForm = LoginForm()
     
+    console_log("is authenticated", current_user.is_authenticated)
+    
     if current_user.is_authenticated:
         return redirect(redirect_url('web_admin.index'))
     
