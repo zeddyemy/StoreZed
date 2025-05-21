@@ -9,15 +9,18 @@ from app.utils.date_time import timedelta
 class Config:
     ENV: str = os.getenv("ENV", "development")
     SECRET_KEY: str = os.getenv("SECRET_KEY", "insecure-dev-secret")  # Warn in prod
-    # Add these CSRF settings
-    WTF_CSRF_ENABLED: str = True
-    WTF_CSRF_TIME_LIMIT: int = 3600  # 1 hour
-    WTF_CSRF_SSL_STRICT: bool = True  # Enable if using HTTPS
     
-    # Session settings
-    SESSION_COOKIE_SECURE: bool = True  # Enable if using HTTPS
+    # Add these CSRF settings
+    WTF_CSRF_ENABLED: bool = True
+    WTF_CSRF_TIME_LIMIT: int = 3600  # 1 hour
+    WTF_CSRF_SSL_STRICT: bool = True  # Enforce CSRF token over HTTPS
+    
+    # Session settings — defaults suitable for HTTPS, adjustable below
+    SESSION_COOKIE_SECURE: bool = parse_bool(os.getenv("SESSION_COOKIE_SECURE", "true"))
     SESSION_COOKIE_HTTPONLY: bool = True
+    SESSION_COOKIE_SAMESITE: str = os.getenv("SESSION_COOKIE_SAMESITE", "Lax")
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
+    
     
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SERVER_NAME: Optional[str] = os.getenv("FLASK_SERVER_NAME")
@@ -67,6 +70,7 @@ class Config:
 
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI: str = os.getenv("DATABASE_URL", "sqlite:///dev.db")
+    SESSION_COOKIE_SECURE: bool = False  # no HTTPS in dev
 
 class ProductionConfig(Config):
     DEBUG: bool = False
@@ -74,6 +78,7 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI: str = os.getenv("DATABASE_URL")  # No default; enforce env var
     SESSION_COOKIE_SECURE: bool = True
     SESSION_COOKIE_SAMESITE: str = "Lax"  # Recommended for security
+    SESSION_COOKIE_DOMAIN = os.getenv("SESSION_COOKIE_DOMAIN", None)
 
 class TestingConfig(Config):
     TESTING: bool = True

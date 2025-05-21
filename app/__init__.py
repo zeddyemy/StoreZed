@@ -25,6 +25,8 @@ def create_app(config_name=Config.ENV, create_defaults=True):
     '''
     app = Flask(__name__)
     
+    console_log("config_name", config_name)
+    
     # --> Add ProxyFix BEFORE loading config <--
     # Tell it Render likely sets X-Forwarded-Proto (1 proxy hop)
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
