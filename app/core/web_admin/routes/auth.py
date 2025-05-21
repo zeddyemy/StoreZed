@@ -150,7 +150,7 @@ def login():
 
 ## Route to Logout
 @web_admin_bp.route("/logout", methods=['GET', 'POST'], strict_slashes=False)
-@web_admin_login_required
+@web_admin_login_required()
 def logout():
     logout_user()
     flash("You have been Logged Out", 'success')
