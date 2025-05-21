@@ -40,7 +40,8 @@ def create_app(config_name=Config.ENV, create_defaults=True):
     def load_user(user_id):
         try:
             stmt = select(AppUser).options(joinedload(AppUser.roles)).filter_by(id=int(user_id))
-            return db.session.execute(stmt).scalar_one_or_none()
+            result = db.session.execute(stmt).unique()  # <-- call unique() here
+            return result.scalar_one_or_none()
         except Exception as e:
             app.logger.error(f"Error loading user {user_id}: {e}")
             return None

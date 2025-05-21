@@ -33,5 +33,6 @@ def dashboard():
 
 
 @web_admin_bp.route("/", methods=['GET'])
+@session_roles_required("Super Admin", "Admin")
 def index():
     return redirect(url_for('web_admin.dashboard'))
