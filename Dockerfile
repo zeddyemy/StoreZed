@@ -16,7 +16,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Use production WSGI server instead of Flask dev server
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "2", "--timeout", "120", "run:flask_app"]
+# Copy the start script and make it executable
+COPY start.sh .
+RUN chmod +x start.sh
+
+# Use ENTRYPOINT to run the script
+ENTRYPOINT ["./start.sh"]
+
+# # Use production WSGI server instead of Flask dev server
+# CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "2", "--timeout", "120", "run:flask_app"]
 
 # CMD ["flask", "run", "-h", "0.0.0.0"]
