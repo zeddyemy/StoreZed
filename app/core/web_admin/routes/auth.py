@@ -21,6 +21,7 @@ from ....models import AppUser, Profile, Address, Role, UserRole
 from ....utils.helpers.user import get_app_user
 from ....utils.helpers.loggers import log_exception, console_log
 from ....utils.helpers.basics import redirect_url
+from ....utils.decorators import web_admin_login_required
 from ....utils.forms import SignUpForm, LoginForm
 
 
@@ -113,9 +114,9 @@ def login():
                 user = get_app_user(email_username)
                 
                 # get next argument fro url
-                next = request.args.get('next')
-                if not next or urlparse(next).netloc != '':
-                    next = url_for('web_admin.index')
+                next_url = request.args.get('next')
+                if not next_url or urlparse(next_url).netloc != '':
+                    next_url = url_for('web_admin.dashboard')
                 
                 if not user:
                     flash("Email/Username is incorrect or doesn't exist", 'error')
@@ -127,7 +128,7 @@ def login():
                 
                 login_user(user)
                 flash("Welcome back " + user.username, 'success')
-                return redirect(next)
+                return redirect(next_url)
             except (DataError, DatabaseError, OperationalError) as e:
                 db.session.rollback()
                 log_exception("Error connecting to the database", e)
@@ -149,7 +150,7 @@ def login():
 
 ## Route to Logout
 @web_admin_bp.route("/logout", methods=['GET', 'POST'], strict_slashes=False)
-@login_required
+@web_admin_login_required
 def logout():
     logout_user()
     flash("You have been Logged Out", 'success')

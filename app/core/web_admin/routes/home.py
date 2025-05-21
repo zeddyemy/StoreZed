@@ -23,7 +23,7 @@ def dashboard():
     try:
         stats = get_stats_for_admin()
         console_log("stats", stats)
-        console_log("current_user", current_user)
+        console_log("current_user from dashboard", current_user)
     except Exception as e:
         log_exception('An exception occurred fetching admin stats', e)
         flash('An unexpected error occurred. Please try again later.', 'danger')
@@ -34,6 +34,6 @@ def dashboard():
 
 
 @web_admin_bp.route("/", methods=['GET'], strict_slashes=False)
-@session_roles_required("Super Admin", "Admin")
 def index():
+    console_log("current_user from index", current_user)
     return redirect(url_for('web_admin.dashboard'))
