@@ -43,6 +43,7 @@ def web_admin_login_required():
             next=request.path
             if not session_user.is_authenticated:
                 flash("You need to login first", 'error')
+                console_log("session_user", session_user)
                 return redirect(url_for('web_admin.login', next=next))
 
             return fn(*args, **kwargs)

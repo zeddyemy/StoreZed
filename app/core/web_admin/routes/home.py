@@ -7,7 +7,7 @@ Package: StoreZed
 """
 
 from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from ....extensions import db
 from ....utils.decorators.auth import session_roles_required
@@ -23,6 +23,7 @@ def dashboard():
     try:
         stats = get_stats_for_admin()
         console_log("stats", stats)
+        console_log("current_user", current_user)
     except Exception as e:
         log_exception('An exception occurred fetching admin stats', e)
         flash('An unexpected error occurred. Please try again later.', 'danger')
