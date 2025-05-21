@@ -13,7 +13,7 @@ from ....utils.helpers.pages import get_predefined_pages
 from ....utils.decorators import web_admin_login_required
 from ....utils.forms.web_admin.settings import MenuItemsForm
 
-@web_admin_bp.route('/appearance/nav-menus', methods=['GET'])
+@web_admin_bp.route('/appearance/nav-menus', methods=['GET'], strict_slashes=False)
 @web_admin_login_required()
 def nav_menus():
     """get all navigation menus."""
@@ -27,7 +27,7 @@ def nav_menus():
     return render_template('web_admin/pages/appearance/nav_menu/nav_menus.html', nav_menus=nav_menus, main_menu=main_menu, categories=categories, tags=tags)
 
 
-@web_admin_bp.route('/appearance/nav-menus/<identifier>', methods=['GET'])
+@web_admin_bp.route('/appearance/nav-menus/<identifier>', methods=['GET'], strict_slashes=False)
 @web_admin_login_required()
 def manage_nav_menu(identifier):
     """Manage and edit a navigation menu along with its menu items."""
@@ -61,7 +61,7 @@ def manage_nav_menu(identifier):
                             nav_menu=nav_menu, categories=categories, tags=tags, pages=pages)
 
 
-@web_admin_bp.route('/appearance/nav-menus/<identifier>', methods=['DELETE'])
+@web_admin_bp.route('/appearance/nav-menus/<identifier>', methods=['DELETE'], strict_slashes=False)
 @web_admin_login_required()
 def delete_nav_menu(identifier):
     try:

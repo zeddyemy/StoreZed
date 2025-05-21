@@ -16,7 +16,7 @@ from ....utils.decorators import session_roles_required, web_admin_login_require
 
 
 
-@web_admin_bp.route("/categories", methods=['GET'])
+@web_admin_bp.route("/categories", methods=['GET'], strict_slashes=False)
 @web_admin_login_required()
 def categories():
     page_num = request.args.get("page", 1, type=int)
@@ -37,7 +37,7 @@ def categories():
     return render_template('web_admin/pages/categories/categories.html', all_categories=all_categories, pagination=pagination, total_pages=total_pages, search_term=search_term, page_name=page_name)
 
 
-@web_admin_bp.route("/categories/new", methods=['GET', 'POST'])
+@web_admin_bp.route("/categories/new", methods=['GET', 'POST'], strict_slashes=False)
 @web_admin_login_required()
 def add_new_category():
     form: CategoryForm = CategoryForm()
@@ -67,7 +67,7 @@ def add_new_category():
     return render_template('web_admin/pages/categories/new_category.html', form=form, category=None)
 
 
-@web_admin_bp.route("/categories/edit/<slug>", methods=['GET', 'POST'])
+@web_admin_bp.route("/categories/edit/<slug>", methods=['GET', 'POST'], strict_slashes=False)
 @web_admin_login_required()
 def edit_category(slug):
     
@@ -102,7 +102,7 @@ def edit_category(slug):
     return render_template('web_admin/pages/categories/edit_category.html', form=form, category=category)
 
 
-@web_admin_bp.route("/categories/delete/<slug>", methods=['POST', 'GET'])
+@web_admin_bp.route("/categories/delete/<slug>", methods=['POST', 'GET'], strict_slashes=False)
 @web_admin_login_required()
 def delete_category(slug):
     """Delete a category."""

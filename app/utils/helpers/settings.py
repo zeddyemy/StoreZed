@@ -86,9 +86,6 @@ def get_general_setting(key: GeneralSettingsKeys, default=None) -> str | None:
     
     setting: GeneralSetting = GeneralSetting.query.filter_by(key=str(key)).first()
     
-    console_log("setting", setting)
-    console_log("setting value", setting.value)
-    
     return setting.value if setting and setting.value else default
 
 

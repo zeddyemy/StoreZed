@@ -22,7 +22,7 @@ from ....utils.helpers.user import get_current_user
 from ....utils.decorators.auth import web_admin_login_required, session_roles_required
 from ....utils.forms import AdminAddUserForm
 
-@web_admin_bp.route("/users", methods=['GET'])
+@web_admin_bp.route("/users", methods=['GET'], strict_slashes=False)
 @session_roles_required("Super Admin", "Admin")
 def users():
     try:
@@ -55,7 +55,7 @@ def users():
     return render_template('web_admin/pages/users/users.html', all_users=all_users, pagination=pagination, total_pages=total_pages, search_term=search_term)
 
 
-@web_admin_bp.route("/users/new", methods=['GET', 'POST'])
+@web_admin_bp.route("/users/new", methods=['GET', 'POST'], strict_slashes=False)
 @session_roles_required("Super Admin", "Admin")
 def add_new_user():
     form: AdminAddUserForm = AdminAddUserForm()
@@ -127,7 +127,7 @@ def add_new_user():
     return render_template('web_admin/pages/users/new_user.html', form=form)
 
 
-@web_admin_bp.route("/users/<user_id>/edit", methods=['GET', 'POST'])
+@web_admin_bp.route("/users/<user_id>/edit", methods=['GET', 'POST'], strict_slashes=False)
 @session_roles_required("Super Admin", "Admin")
 def edit_user(user_id):
     form: AdminAddUserForm = AdminAddUserForm()

@@ -14,7 +14,7 @@ from ....utils.decorators import session_roles_required, web_admin_login_require
 
 
 
-@web_admin_bp.route("/tags", methods=['GET'])
+@web_admin_bp.route("/tags", methods=['GET'], strict_slashes=False)
 @web_admin_login_required()
 def tags():
     page_num = request.args.get("page", 1, type=int)
@@ -35,7 +35,7 @@ def tags():
     return render_template('web_admin/pages/tags/tags.html', all_tags=all_tags, pagination=pagination, total_pages=total_pages, search_term=search_term, page_name=page_name)
 
 
-@web_admin_bp.route("/tags/new", methods=['GET', 'POST'])
+@web_admin_bp.route("/tags/new", methods=['GET', 'POST'], strict_slashes=False)
 @web_admin_login_required()
 def add_new_tag():
     form: TagForm = TagForm()
@@ -64,7 +64,7 @@ def add_new_tag():
     return render_template('web_admin/pages/tags/new_tag.html', form=form, tag=None)
 
 
-@web_admin_bp.route("/tags/edit/<slug>", methods=['GET', 'POST'])
+@web_admin_bp.route("/tags/edit/<slug>", methods=['GET', 'POST'], strict_slashes=False)
 @web_admin_login_required()
 def edit_tag(slug):
     
@@ -100,7 +100,7 @@ def edit_tag(slug):
     return render_template('web_admin/pages/tags/edit_tag.html', form=form, tag=tag)
 
 
-@web_admin_bp.route("/tags/delete/<slug>", methods=['POST', 'GET'])
+@web_admin_bp.route("/tags/delete/<slug>", methods=['POST', 'GET'], strict_slashes=False)
 @web_admin_login_required()
 def delete_tag(slug):
     """Delete a tag."""

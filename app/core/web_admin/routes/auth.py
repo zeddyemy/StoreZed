@@ -25,8 +25,8 @@ from ....utils.forms import SignUpForm, LoginForm
 
 
 ## Route to sign up user
-@web_admin_bp.route("/signup", methods=['GET', 'POST'])
-@web_admin_bp.route("/register", methods=['GET', 'POST'])
+@web_admin_bp.route("/signup", methods=['GET', 'POST'], strict_slashes=False)
+@web_admin_bp.route("/register", methods=['GET', 'POST'], strict_slashes=False)
 def sign_up():
     form: SignUpForm = SignUpForm()
     
@@ -95,7 +95,7 @@ def sign_up():
     return render_template('web_admin/pages/auth/register.html', form=form, page='auth')
 
 ## Route to Login
-@web_admin_bp.route("/login", methods=['GET', 'POST'])
+@web_admin_bp.route("/login", methods=['GET', 'POST'], strict_slashes=False)
 def login():
     form: LoginForm = LoginForm()
     
@@ -148,7 +148,7 @@ def login():
     return render_template('web_admin/pages/auth/login.html', form=form, page='auth')
 
 ## Route to Logout
-@web_admin_bp.route("/logout", methods=['GET', 'POST'])
+@web_admin_bp.route("/logout", methods=['GET', 'POST'], strict_slashes=False)
 @login_required
 def logout():
     logout_user()

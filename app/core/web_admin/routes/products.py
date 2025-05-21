@@ -22,7 +22,7 @@ from ....utils.helpers.products import fetch_all_products, fetch_product, save_p
 
 from ....utils.forms.web_admin.products import AddProductForm, generate_category_field
 
-@web_admin_bp.route("/products", methods=['GET'])
+@web_admin_bp.route("/products", methods=['GET'], strict_slashes=False)
 @web_admin_login_required()
 def products():
     page_num = request.args.get("page", 1, type=int)
@@ -44,7 +44,7 @@ def products():
     
     return render_template('web_admin/pages/products/products.html', all_products=all_products, pagination=pagination, total_pages=total_pages, search_term=search_term)
 
-@web_admin_bp.route("/products/new", methods=['GET', 'POST'])
+@web_admin_bp.route("/products/new", methods=['GET', 'POST'], strict_slashes=False)
 @web_admin_login_required()
 def add_new_product():
     """Render form for adding a new product and handle form submission."""
@@ -88,7 +88,7 @@ def add_new_product():
     return render_template('web_admin/pages/products/new_products.html', form=form, product=None, pid=pid, category_field=category_field, parent_cat_field=parent_cat_field)
 
 
-@web_admin_bp.route("/products/edit/<slug>", methods=['GET', 'POST'])
+@web_admin_bp.route("/products/edit/<slug>", methods=['GET', 'POST'], strict_slashes=False)
 @web_admin_login_required()
 def edit_product(slug):
     
@@ -129,7 +129,7 @@ def edit_product(slug):
     
     return render_template('web_admin/pages/products/edit_product.html', form=form, product=product, pid=product.uuid, category_field=category_field, parent_cat_field=parent_cat_field)
 
-@web_admin_bp.route("/products/delete/<slug>", methods=['GET', 'POST'])
+@web_admin_bp.route("/products/delete/<slug>", methods=['GET', 'POST'], strict_slashes=False)
 @web_admin_login_required()
 def delete_product(slug):
     """Delete a product."""
