@@ -78,6 +78,9 @@ class ProductionConfig(Config):
     SESSION_COOKIE_SECURE: bool = True
     SESSION_COOKIE_SAMESITE: str = "Lax"  # Recommended for security
     SESSION_COOKIE_DOMAIN = os.getenv("SESSION_COOKIE_DOMAIN", None)
+    SESSION_COOKIE_NAME = os.getenv("SESSION_COOKIE_NAME", None)
+    WTF_CSRF_SSL_STRICT: bool = False
+    PREFERRED_URL_SCHEME: Optional[str] = os.getenv("FLASK_URL_SCHEME", "https")
 
 class TestingConfig(Config):
     TESTING: bool = True
