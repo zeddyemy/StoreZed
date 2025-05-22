@@ -6,9 +6,6 @@
 migrations/
 migrations.*/
 migrations_*/
-migrations_l/
-migrations_p/
-migrations_s/
 node_modules/
 instance/
 codebase.txt

@@ -20,6 +20,9 @@ def register_all_blueprints(app: Flask) -> None:
     from .core.api_admin import admin_api_bp
     app.register_blueprint(admin_api_bp)
     
+    from .core.debug import debug_bp
+    app.register_blueprint(debug_bp)
+    
     
     # Swagger setup
     from flask_swagger_ui import get_swaggerui_blueprint
