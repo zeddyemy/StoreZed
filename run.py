@@ -7,6 +7,9 @@ It creates an instance of the application and runs it.
 @link: https://github.com/zeddyemy
 @package: StoreZed
 '''
+from gevent import monkey
+monkey.patch_all()
+
 from app import create_app
 
 flask_app = create_app()
