@@ -29,13 +29,7 @@ def create_app(config_name=Config.ENV, create_defaults=True):
     
     # --> Add ProxyFix BEFORE loading config <--
     # Tell it Render likely sets X-Forwarded-Proto (1 proxy hop)
-    app.wsgi_app = ProxyFix(
-        app.wsgi_app,
-        x_for=1,
-        x_proto=1,
-        x_host=1,
-        x_prefix=1  # Important for URL generation
-    )
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
     # --> End ProxyFix <--
     
     app.config.from_object(config_by_name[config_name])

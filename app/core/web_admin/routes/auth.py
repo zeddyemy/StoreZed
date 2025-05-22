@@ -100,14 +100,10 @@ def sign_up():
 def login():
     form: LoginForm = LoginForm()
     
-    console_log("is authenticated", current_user.is_authenticated)
-    
     if current_user.is_authenticated:
         return redirect(redirect_url('web_admin.index'))
     
     if request.method == 'POST':
-        console_log("CSRF current_token", form.csrf_token.current_token)
-        
         if form.validate_on_submit():
             try:
                 email_username = form.email_username.data
