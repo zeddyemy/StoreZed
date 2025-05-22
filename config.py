@@ -20,18 +20,16 @@ class Config:
     SESSION_COOKIE_SAMESITE: str = os.getenv("SESSION_COOKIE_SAMESITE", "Lax")
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
     
-    
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SERVER_NAME: Optional[str] = os.getenv("FLASK_SERVER_NAME")
     PREFERRED_URL_SCHEME: Optional[str] = os.getenv("FLASK_URL_SCHEME", "http")
-    
     
     DEBUG: bool = parse_bool(os.getenv("DEBUG")) or (ENV == "development") # Enable debug mode only in development
     EMERGENCY_MODE: bool = parse_bool(os.getenv("EMERGENCY_MODE", False))
     
     CLIENT_ORIGINS: List[str] = [
         origin.strip() for origin in 
-        os.getenv("CLIENT_ORIGINS", "https://storezed-1.onrender.com,https://storezed.onrender.com,http://localhost:3000,http://localhost:5173").split(",")
+        os.getenv("CLIENT_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",")
     ]
     
     # Security credentials (use a vault in production)
@@ -55,12 +53,10 @@ class Config:
     API_DOMAIN_NAME: str = os.getenv("API_DOMAIN_NAME", "http://localhost:5000")
     APP_DOMAIN_NAME: str = os.getenv("APP_DOMAIN_NAME", "http://localhost:5000")
     
-    
     # Cloudinary configurations
     CLOUDINARY_CLOUD_NAME: Optional[str] = os.getenv("CLOUDINARY_CLOUD_NAME")
     CLOUDINARY_API_KEY: Optional[str] = os.getenv("CLOUDINARY_API_KEY")
     CLOUDINARY_API_SECRET: Optional[str] = os.getenv("CLOUDINARY_API_SECRET")
-    
     
     #  ExchangeRate-API
     EXCHANGE_RATE_API_KEY: Optional[str] = os.getenv("EXCHANGE_RATE_API_KEY")
@@ -78,9 +74,7 @@ class ProductionConfig(Config):
     SESSION_COOKIE_SECURE: bool = True
     SESSION_COOKIE_SAMESITE: str = "Lax"  # Recommended for security
     SESSION_COOKIE_DOMAIN = os.getenv("SESSION_COOKIE_DOMAIN", None)
-    SESSION_COOKIE_NAME = os.getenv("SESSION_COOKIE_NAME", None)
-    WTF_CSRF_SSL_STRICT: bool = False
-    PREFERRED_URL_SCHEME: Optional[str] = os.getenv("FLASK_URL_SCHEME", "https")
+    SESSION_COOKIE_NAME = os.getenv("SESSION_COOKIE_NAME", "app_session")
 
 class TestingConfig(Config):
     TESTING: bool = True
