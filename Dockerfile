@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Use the shell form of CMD
-CMD gunicorn --bind 0.0.0.0:$PORT --workers 2 --timeout 120 run:flask_app
+CMD gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 --worker-class gevent run:flask_app
 
 # # Copy the server script and make it executable
 # COPY server.sh .

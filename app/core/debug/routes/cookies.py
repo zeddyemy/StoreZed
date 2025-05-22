@@ -42,3 +42,8 @@ def get_session():
         return 'Session value is %s.' % session['session name']
     else:
         return 'Session value not found'
+
+@debug_bp.route('/test-session')
+def test_session():
+    session['test'] = 'works'
+    return str(session.get('test'))
