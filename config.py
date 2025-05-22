@@ -16,7 +16,6 @@ class Config:
     WTF_CSRF_SSL_STRICT: bool = True  # Enforce CSRF token over HTTPS
     
     # Session settings — defaults suitable for HTTPS, adjustable below
-    SESSION_COOKIE_SECURE: bool = parse_bool(os.getenv("SESSION_COOKIE_SECURE", "true"))
     SESSION_COOKIE_HTTPONLY: bool = True
     SESSION_COOKIE_SAMESITE: str = os.getenv("SESSION_COOKIE_SAMESITE", "Lax")
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
@@ -32,7 +31,7 @@ class Config:
     
     CLIENT_ORIGINS: List[str] = [
         origin.strip() for origin in 
-        os.getenv("CLIENT_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",")
+        os.getenv("CLIENT_ORIGINS", "https://storezed-1.onrender.com,https://storezed.onrender.com,http://localhost:3000,http://localhost:5173").split(",")
     ]
     
     # Security credentials (use a vault in production)
